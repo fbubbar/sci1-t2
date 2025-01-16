@@ -1,0 +1,14 @@
+{
+  "name": "Manim",
+  "dockerFile": "./Containerfile",
+  "containerUser": "manimuser",
+  "runArgs": ["--userns=keep-id"],
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "Rickaym.manim-sideview"
+      ]
+    }
+  }
+}
