@@ -10,7 +10,7 @@ width = 7.1
 height = 0.8
 
 # Create the box (representing the rigid body)
-box_object = box(pos=vector(0, 0, 0), size=vector(length, width, height), color=color.blue)
+box_object = box(pos=vector(0, 0, 0), size=vector(length, width, height), color=color.purple)
 
 # Density is assumed to be 1 (unit mass per unit volume)
 density = 1.0
