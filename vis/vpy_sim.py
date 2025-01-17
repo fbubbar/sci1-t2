@@ -2,7 +2,7 @@ from vpython import *
 import numpy as np
 
 # Create the 3D scene
-scene = canvas(title="Dzhenibekhov Effect")
+scene = canvas(title="Dzhanibekhov Effect")
 
 # Define box dimensions (length, width, height)
 length = 14.4
@@ -32,11 +32,11 @@ dt = 0.001
 time = 0
 
 # Create a graph for angular velocity and angular momentum
-graph = graph(width=600, height=400, title="Angular Velocity and Momentum", xtitle="Time (s)", ytitle="Value")
+g = graph(width=600, height=400, title="Angular Velocity and Momentum", xtitle="Time (s)", ytitle="Value")
 
 # Create curves for angular velocity and angular momentum
-angular_velocity_curve = gcurve(graph=graph, color=color.green, label="Angular Velocity")
-angular_momentum_curve = gcurve(graph=graph, color=color.red, label="Angular Momentum")
+angular_velocity_curve = gcurve(graph=g, color=color.green, label="Angular Velocity")
+angular_momentum_curve = gcurve(graph=g, color=color.red, label="Angular Momentum")
 
 # Function to update the rotation of the box based on angular velocity
 def update_rotation(omega=omega):
