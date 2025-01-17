@@ -28,16 +28,16 @@ omega = np.array([0.0, 2, 0.01])  # small deviation in x and z axes
 I = np.diag([I1, I2, I3])
 
 # Time step for the simulation
-dt = 0.001
+dt = 0.01
 time = 0
 
 # Create a graph for angular velocity and angular momentum
-g = graph(width=600, height=400, title="Angular Velocity and Momentum", xtitle="Time (s)", ytitle="Value")
+g = graph(width=600, height=400, title="Angular Velocity on 3 axes", xtitle="Time (s)", ytitle="Value")
 
 # Create curves for angular velocity and angular momentum
-angular_velocity_curve_x = gcurve(graph=graph, color=color.green, label="Angular Velocity in x-axis")
-angular_velocity_curve_y = gcurve(graph=graph, color=color.blue, label="Angular Velocity in y-axis")
-angular_velocity_curve_z = gcurve(graph=graph, color=color.red, label="Angular Velocity in z-axis")
+angular_velocity_curve_x = gcurve(graph=g, color=color.green, label="Angular Velocity in x-axis")
+angular_velocity_curve_y = gcurve(graph=g, color=color.blue, label="Angular Velocity in y-axis")
+angular_velocity_curve_z = gcurve(graph=g, color=color.red, label="Angular Velocity in z-axis")
 #angular_momentum_curve = gcurve(graph=graph, color=color.red, label="Angular Momentum")
 
 # Function to update the rotation of the box based on angular velocity
