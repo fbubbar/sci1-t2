@@ -22,7 +22,7 @@ I2 = (1/12) * mass * (length**2 + height**2)  # about y-axis
 I3 = (1/12) * mass * (length**2 + width**2)   # about z-axis
 
 # Initial angular velocity
-omega = np.array([0.0, 5, 0.01])  # small deviation in x and z axes
+omega = np.array([0.0, 2, 0.01])  # small deviation in x and z axes
 
 # Inertia tensor (diagonal)
 I = np.diag([I1, I2, I3])
@@ -35,8 +35,10 @@ time = 0
 g = graph(width=600, height=400, title="Angular Velocity and Momentum", xtitle="Time (s)", ytitle="Value")
 
 # Create curves for angular velocity and angular momentum
-angular_velocity_curve = gcurve(graph=g, color=color.green, label="Angular Velocity")
-angular_momentum_curve = gcurve(graph=g, color=color.red, label="Angular Momentum")
+angular_velocity_curve_x = gcurve(graph=graph, color=color.green, label="Angular Velocity in x-axis")
+angular_velocity_curve_y = gcurve(graph=graph, color=color.blue, label="Angular Velocity in y-axis")
+angular_velocity_curve_z = gcurve(graph=graph, color=color.red, label="Angular Velocity in z-axis")
+#angular_momentum_curve = gcurve(graph=graph, color=color.red, label="Angular Momentum")
 
 # Function to update the rotation of the box based on angular velocity
 def update_rotation(omega=omega):
@@ -51,8 +53,10 @@ def update_rotation(omega=omega):
     omega += omega_dot * dt
     angular_momentum = np.dot(I, omega)  # Angular momentum = I * omega
     total_angular_momentum = np.linalg.norm(angular_momentum)  # Magnitude of angular momentum
-    angular_velocity_curve.plot(pos=(time, np.linalg.norm(omega)))  # Plot angular velocity magnitude
-    angular_momentum_curve.plot(pos=(time, total_angular_momentum))  # Plot angular momentum magnitude
+    angular_velocity_curve_x.plot(pos=(time, omega[0]))  # Plot angular velocity magnitude
+    angular_velocity_curve_y.plot(pos=(time, omega[1]))  # Plot angular velocity magnitude
+    angular_velocity_curve_z.plot(pos=(time, omega[2]))  # Plot angular velocity magnitude
+    #angular_momentum_curve.plot(pos=(time, total_angular_momentum))  # Plot angular momentum magnitude
 
     
     # Update orientation of the box based on angular velocity
