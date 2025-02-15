@@ -66,6 +66,8 @@ def process_csv(file):
             if not segments.keep.get(i, True):
                 log.info(f'-> discarding segment {i}' )
                 continue
+        else:
+            comment = None
 
         mask = (data['Time (s)'] >= start) & (data['Time (s)'] <= end)
         trial = data.loc[mask]
