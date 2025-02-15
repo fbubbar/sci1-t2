@@ -29,7 +29,7 @@ def get_freq(trial):
 def analyse_trial_freqs(trials, trials_meta):
     for trial, meta in zip(trials, trials_meta):
         j, src, comment = meta
-        if 'intermediate' in comment.lower():
+        if isinstance(comment, str) and 'intermediate' in comment.lower():
             dom_freq, period, ptn = get_freq(trial)
             print()
             print(f'Results for segment {j} of {src}:')
