@@ -125,3 +125,26 @@ def plot_trial(i, trial, meta, cols, ylabel):
     plt.title(title)
     plt.show()
 
+
+def plot_speed_vs_period(trials, period_data):
+    # initial speed = maximum gyro x value from `trials`
+    omega0s = []
+    for trial in trials:
+        omega0 = trial['Gyroscope x (rad/s)'].abs().max()
+        omega0s.append(omega0)
+
+    # combine the speed data with the period data
+    period_data['omega0'] = [omega0s[idx] for idx in period_data.index]
+
+    # make a plot
+    plt.title('Period of Unstable Motion')
+    plt.xlabel('Initial Angular Speed [rad/s]')
+    plt.ylabel('Period [s]')
+
+    plt.errorbar(period_data['omega0'], period_data['T'], 
+             yerr=period_data['dT'], label='Measured',
+             fmt='.', markersize=3, capsize=3)
+
+    plt.legend()
+    plt.show()
+

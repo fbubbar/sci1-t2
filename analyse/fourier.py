@@ -1,8 +1,11 @@
-
-from . import log, np
+from . import log, np, pd, plt
 from scipy.fftpack import fft, fftfreq
+from scipy.optimize import curve_fit
 
-def get_freq(trial):
+def norm(x, amp, mu, sig):
+    return amp * np.exp(-(x-mu)**2 / (2*sig**2))
+
+def get_freq(trial, plot_spectrum=False):
     wi = trial['Gyroscope x (rad/s)']
 
     N = len(wi)
@@ -20,23 +23,45 @@ def get_freq(trial):
     # calculate peak-to-noise ratio
     noise_mag = np.delete(magnitudes, dom_i)
     noise_level = np.mean(noise_mag)
-    peak_to_noise_ratio = dom_mag / noise_level if noise_level != 0 else np.inf
-    period = 1 / dom_freq if dom_freq != 0 else np.inf
+    ptnr = dom_mag / noise_level if noise_level != 0 else np.inf
 
-    return dom_freq, period, peak_to_noise_ratio
+    # fit a normal distribution to estimate the peak and uncertainty
+    fit_radius = 3
+    low_i = max(0, dom_i - fit_radius)
+    high_i = min(len(xf), dom_i + fit_radius + 1)
+    fit_range = slice(low_i, high_i)
+    (_amp, freq, dfreq), _ = curve_fit(norm, xf[fit_range], 
+                                       magnitudes[fit_range], 
+                                       p0=[dom_mag, dom_freq, 1.])
+
+    if plot_spectrum:
+        plt.plot(xf, magnitudes, 'o', label='Freqency Spectrum')
+        norm_xs = np.linspace(xf[low_i], xf[high_i], 1000)
+        plt.plot(norm_xs, norm(norm_xs, _amp, freq, dfreq), label='Error Model')
+        plt.xlabel('Frequency [Hz]')
+        plt.ylabel('Magnitude')
+        plt.show()
+
+    return freq, dfreq, ptnr
 
 
-def analyse_trial_freqs(trials, trials_meta):
-    for trial, meta in zip(trials, trials_meta):
+def analyse_trial_freqs(trials, trials_meta, plot_spectra=False):
+    period_data = pd.DataFrame(columns=['f', 'df', 'T', 'dT', 'ptnr'])
+    for i, (trial, meta) in enumerate(zip(trials, trials_meta)):
         j, src, comment = meta
         if isinstance(comment, str) and 'intermediate' in comment.lower():
-            dom_freq, period, ptn = get_freq(trial)
-            print()
+            freq, dfreq, ptnr = get_freq(trial, plot_spectrum=plot_spectra)
+            T, dT = 1/freq, dfreq/freq**2
+            period_data.loc[i] = [freq, dfreq, T, dT, ptnr]
+
+            # log the results
             print(f'Results for segment {j} of {src}:')
-            print(f"-> dominant frequency: {dom_freq:.2f} Hz")
-            print(f"-> period: {period:.4f} seconds")
-            print(f"-> peak-to-noise ratio: {ptn:.2f}")
-            print()
+            print(f"-> dominant frequency: {freq:.2f} ± {dfreq:.2f} Hz")
+            print(f"-> period: {T:.4f} ± {dT:.4f} seconds")
+            print(f"-> peak-to-noise ratio: {ptnr:.2f}")
         else:
             log.info(f"Skipping segment {j} of '{src}' ...")
+
+    return period_data
+
 
