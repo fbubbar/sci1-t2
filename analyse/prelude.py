@@ -1,5 +1,5 @@
 
-from .fourier import *
+from .period import *
 from .moi import *
 from .process import *
 

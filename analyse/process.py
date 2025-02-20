@@ -1,6 +1,5 @@
 
 from . import log, pd, plt
-from .fourier import get_freq
 
 from glob import glob
 from os import path
@@ -126,7 +125,7 @@ def plot_trial(i, trial, meta, cols, ylabel):
     plt.show()
 
 
-def plot_speed_vs_period(trials, period_data):
+def fourier_plot_speed_vs_period(trials, period_data):
     # initial speed = maximum gyro x value from `trials`
     omega0s = []
     for trial in trials:
@@ -142,8 +141,20 @@ def plot_speed_vs_period(trials, period_data):
     plt.ylabel('Period [s]')
 
     plt.errorbar(period_data['omega0'], period_data['T'], 
-             yerr=period_data['dT'], label='Measured',
-             fmt='.', markersize=3, capsize=3)
+                 yerr=period_data['dT'], label='Measured',
+                 fmt='.', markersize=3, capsize=3)
+
+    plt.legend()
+    plt.show()
+
+
+def plot_speed_vs_period(omega0s, T, dT):
+    plt.title('Period of Unstable Motion')
+    plt.xlabel('Initial Angular Speed [rad/s]')
+    plt.ylabel('Period [s]')
+
+    plt.errorbar(omega0s, T, yerr=dT, label='Measured', 
+                 fmt='o', markersize=3, capsize=2)
 
     plt.legend()
     plt.show()

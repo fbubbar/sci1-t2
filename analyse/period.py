@@ -45,7 +45,7 @@ def get_freq(trial, plot_spectrum=False):
     return freq, dfreq, ptnr
 
 
-def analyse_trial_freqs(trials, trials_meta, plot_spectra=False):
+def fourier_trial_freqs(trials, trials_meta, plot_spectra=False):
     period_data = pd.DataFrame(columns=['f', 'df', 'T', 'dT', 'ptnr'])
     for i, (trial, meta) in enumerate(zip(trials, trials_meta)):
         j, src, comment = meta
@@ -64,4 +64,58 @@ def analyse_trial_freqs(trials, trials_meta, plot_spectra=False):
 
     return period_data
 
+
+def point_method(trial, plot_points=False):
+    wi = trial['Gyroscope x (rad/s)']
+    time = trial['Time (s)']
+
+    end_indices = np.sign(wi).diff().fillna(0) != 0
+    start_indices = list(end_indices[1:]) + [False]
+
+    x1 = np.array(time[start_indices])
+    x2 = np.array(time[end_indices])
+    y1 = np.array(wi[start_indices])
+    y2 = np.array(wi[end_indices])
+    zero_times = x1 - y1*(x2-x1)/(y2-y1)
+    
+    n = 5 # window size
+    local_min_i = wi == wi.rolling(n, center=True).min()
+    local_max_i = wi == wi.rolling(n, center=True).max()
+    local_min_t = time[local_min_i]
+    local_max_t = time[local_max_i]
+
+    all_times = np.concatenate([zero_times, local_min_t, local_max_t])
+    diffs = np.diff(np.sort(all_times))
+
+    if len(diffs) == 0:
+        log.warning('zero method returned no results')
+        return None, None
+    elif len(diffs) == 1:
+        T, dT = diffs[0] * 4, np.inf
+    else:
+        T, dT = diffs.mean() * 4, diffs.std() * 4
+
+    if plot_points:
+        plt.plot(time, wi)
+        plt.scatter(local_min_t, wi[local_min_i], c='r')
+        plt.scatter(local_max_t, wi[local_max_i], c='g')
+        plt.scatter(zero_times, np.zeros_like(zero_times), c='b')
+        plt.show()
+
+    return T, dT
+
+
+def point_trial_periods(trials, plot_points=False):
+    omega0s = []
+    T, dT = [], []
+    for trial in trials:
+        Ti, dTi = point_method(trial, plot_points=plot_points)
+        if Ti:
+            T.append(Ti)
+            dT.append(dTi)
+
+            omega0 = trial['Gyroscope x (rad/s)'].abs().max()
+            omega0s.append(omega0)
+
+    return omega0s, T, dT
 
