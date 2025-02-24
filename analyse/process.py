@@ -148,12 +148,13 @@ def fourier_plot_speed_vs_period(trials, period_data):
     plt.show()
 
 
-def plot_speed_vs_period(omega0s, T, dT):
+def plot_speed_vs_period(period_data):
     plt.title('Period of Unstable Motion')
     plt.xlabel('Initial Angular Speed [rad/s]')
     plt.ylabel('Period [s]')
 
-    plt.errorbar(omega0s, T, yerr=dT, label='Measured', 
+    plt.errorbar(period_data['omega0'], period_data['T'], 
+                 yerr=period_data['dT'], label='Measured', 
                  fmt='o', markersize=3, capsize=2)
 
     plt.legend()

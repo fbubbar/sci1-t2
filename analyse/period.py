@@ -100,22 +100,33 @@ def point_method(trial, plot_points=False):
         plt.scatter(local_min_t, wi[local_min_i], c='r')
         plt.scatter(local_max_t, wi[local_max_i], c='g')
         plt.scatter(zero_times, np.zeros_like(zero_times), c='b')
+
+        plt.xlabel('Time [s]')
+        plt.ylabel('Angular Velocity [rad/s]')
         plt.show()
 
     return T, dT
 
 
-def point_trial_periods(trials, plot_points=False):
-    omega0s = []
-    T, dT = [], []
-    for trial in trials:
-        Ti, dTi = point_method(trial, plot_points=plot_points)
-        if Ti:
-            T.append(Ti)
-            dT.append(dTi)
-
+def point_trial_periods(trials, trials_meta, plot_points=False):
+    period_data = pd.DataFrame(columns=['omega0', 'T', 'dT', 'rel_err'])
+    for i, (trial, meta) in enumerate(zip(trials, trials_meta)):
+        j, src, comment = meta
+        if isinstance(comment, str) and 'intermediate' in comment.lower():
             omega0 = trial['Gyroscope x (rad/s)'].abs().max()
-            omega0s.append(omega0)
 
-    return omega0s, T, dT
+            T, dT = point_method(trial, plot_points=plot_points)
+            if T and dT:
+                rel_dT = dT/T * 100
+                period_data.loc[i] = [omega0, T, dT, rel_dT]
+
+                # log the results
+                print(f'Results for segment {j} of {src}:')
+                print(f'-> initial angular speed: {omega0:.2f} rad/s')
+                print(f'-> period: {T:.4f} ± {dT:.4f} seconds (rel. {rel_dT:.2f}%)')
+                continue
+        
+        log.info(f"Skipping segment {j} of '{src}' ...")
+
+    return period_data
 
