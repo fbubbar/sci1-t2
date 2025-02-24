@@ -8,7 +8,14 @@ rootpath = path.relpath(path.join(__file__, '../..'))
 
 
 def load_files(pat):
-    csv_files = glob(f'{rootpath}/data/{pat}/Gyroscope*/Raw Data.csv')
+    if isinstance(pat, str):
+        pats = [pat]
+    else:
+        pats = pat
+
+    csv_files = []
+    for pat in pats:
+        csv_files.extend(glob(f'{rootpath}/data/{pat}/Gyroscope*/Raw Data.csv'))
 
     trials = []
     trials_meta = []
