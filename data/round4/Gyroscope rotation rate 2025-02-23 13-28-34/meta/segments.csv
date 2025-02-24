@@ -1,15 +1,15 @@
 segment,start,end,keep,comment
 0,2.25,2.9,,Intermediate axis rotation
-1,17.32,18.2,False,Intermediate axis rotation
-2, 24.12,24.85,False,Intermediate axis rotation
-3, 34.7,35.558,False,Intermediate axis rotation
-4, 40.52,40.93,False,Intermediate axis rotation
-5, 47.5,48.3,False,Intermediate axis rotation
-6, 46.88,47.55,False,Intermediate axis rotation
+1,17.32,18.2,false,not a trial
+2, 24.12,24.85,false,not a trial
+3, 34.7,35.558,false,not a trial
+4, 40.52,40.93,false,not a trial
+5, 47.5,48.3,false,not a trial
+6, 46.88,47.55,false,not a trial
 7, 65.4, 65.9,, Intermediate axis rotation
 8, 70.24,70.8,,Intermediate axis rotation
 9, 76.67,77.21,,Intermediate axis rotation
-10, 82.2,82.7,False,Intermediate axis rotation
+10, 82.2,82.7,false,not a trial
 11, 88.65,89.2,,Intermediate axis rotation
 12, 94.33,94.82,,Intermediate axis rotation
 13, 113.725,114.2,,Intermediate axis rotation
@@ -39,7 +39,7 @@ segment,start,end,keep,comment
 37, 286.74,287.63,,Intermediate axis rotation
 38, 293.18, 293.98,,Intermediate axis rotation
 39, 300.76, 301.48,,Intermediate axis rotation
-40, 307.5,308.3,False,Intermediate axis rotation
+40, 307.5,308.3,false,not a trial
 41, 308.84, 309.61,,Intermediate axis rotation
 42, 314.35, 315.05,,Intermediate axis rotation
 43, 319.32, 320.08,,Intermediate axis rotation
