@@ -3,7 +3,8 @@ from . import log, pd, plt
 
 from glob import glob
 from os import path
-
+from scipy.optimize import curve_fit
+import numpy as np
 rootpath = path.relpath(path.join(__file__, '../..'))
 
 
@@ -167,3 +168,42 @@ def plot_speed_vs_period(period_data):
     plt.legend()
     plt.show()
 
+def fit_model(period_data):
+    def model(x, a, b):
+        return a * x + b
+    num_parameters = 2
+    param_bounds=([-np.inf, -np.inf],[np.inf,np.inf])  
+    initial_param=(0,0) 
+    speed = period_data['omega0']
+    period = period_data['T']
+    period_err = period_data['dT']
+    # make model
+    optimized_parameters, covariance_matrix = curve_fit(model, speed, period,
+                                                        sigma=period_err,absolute_sigma=True,
+                                                        bounds=param_bounds,p0=initial_param)
+    parameter_errors = np.sqrt(np.diag(covariance_matrix))
+    for i in range(len(optimized_parameters)):
+        log.info(f'Parameter #{i+1}: {optimized_parameters[i]:.6e} ± {parameter_errors[i]:.1e}, relative error: {parameter_errors[i]/optimized_parameters[i]:.2f}')
+    # plot model
+    xForLine = np.linspace(0, max(speed)+0.5, 200)
+    yForLine = model(xForLine, *optimized_parameters)
+    plt.errorbar(speed, period, yerr=period_err, fmt='o', markersize=3, capsize=2)
+    plt.plot(xForLine, yForLine, label='Fit')
+    plt.xlabel('Initial Angular Speed [rad/s]')
+    plt.ylabel('Period [s]')
+    plt.legend()
+    plt.show()
+    # residuals plot
+    residuals = period - model(speed, *optimized_parameters)
+    plt.errorbar(speed, residuals, yerr=period_err, fmt='o', markersize=3, capsize=2)
+    plt.axhline(0, color='black', linewidth=1)
+    plt.xlabel('Initial Angular Speed [rad/s]')
+    plt.ylabel('Residuals [s]')
+    plt.show()
+    # chi squared
+    n_dof = len(speed) - num_parameters -1
+    ru = residuals/period_err
+    chisq = np.sum(np.power(ru,2)) / n_dof
+    log.info(f'Chi squared: {chisq:.2f}')
+
+    
