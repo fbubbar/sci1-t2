@@ -10,25 +10,23 @@ class Ellipsoid(ThreeDScene):
         self.set_camera_orientation(phi=75 * DEGREES, theta=-PI/4)
         self.begin_ambient_camera_rotation(rate=PI)
 
-        I = np.array([3, 2, 1])
-        omega = np.array([0, 1, 0])
-        E = 1/2 * np.dot(I, omega)
+        I = np.array([2, 2, 1])
+        omega0 = np.array([0, 1, 0])
+        E = 1/2 * np.dot(I, omega0**2)
 
         dims = np.sqrt(2 * E * I)
         ellipsoid = self.make_ellipsoid(*dims)
         self.add(ellipsoid)
 
-        L = np.sqrt(np.dot(I**2, omega**2))
+        L = np.sqrt(np.dot(I**2, omega0**2))
         sphere = self.make_sphere(L).set_fill(color=GREEN)
         self.add(sphere)
-
-        self.wait(2)
 
     def make_sphere(self, r):
         return self.make_ellipsoid(r, r, r)
 
     def make_ellipsoid(self, a, b, c):
-        ellipsoid = Surface(
+        return Surface(
             checkerboard_colors=False,
             resolution=(100, 100),
             stroke_width=0,
@@ -43,5 +41,4 @@ class Ellipsoid(ThreeDScene):
                 c * np.cos(v)
             ])
         )
-        return ellipsoid
 
