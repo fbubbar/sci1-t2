@@ -7,10 +7,27 @@ class Ellipsoid(ThreeDScene):
     def construct(self):
         axes = ThreeDAxes()
         self.add(axes)
-        self.set_camera_orientation(phi=75 * DEGREES, theta=-PI/4)
-        self.begin_ambient_camera_rotation(rate=PI)
 
-        I = np.array([2, 2, 1])
+        theta = PI/4
+        x_label = axes.get_x_axis_label('L_1') \
+            .rotate(PI/2, axis=RIGHT) \
+            .rotate(theta, axis=OUT) \
+            .shift(0.1 * LEFT)
+        y_label = axes.get_y_axis_label('L_2') \
+            .rotate(PI/2, axis=RIGHT) \
+            .rotate(PI/2, axis=UP) \
+            .rotate(theta, axis=OUT) \
+            .shift(0.50 * RIGHT) \
+            .shift(0.90 * OUT)
+        z_label = axes.get_z_axis_label('L_3') \
+            .rotate(theta, axis=OUT) \
+            .shift(0.25 * RIGHT)
+        self.add(x_label, y_label, z_label)
+
+        self.set_camera_orientation(phi=75 * DEGREES, theta=-theta)
+        # self.begin_ambient_camera_rotation(rate=PI)
+
+        I = np.array([3, 2, 1])
         omega0 = np.array([0, 1, 0])
         E = 1/2 * np.dot(I, omega0**2)
 
@@ -28,7 +45,7 @@ class Ellipsoid(ThreeDScene):
     def make_ellipsoid(self, a, b, c):
         return Surface(
             checkerboard_colors=False,
-            resolution=(100, 100),
+            resolution=(200, 200),
             stroke_width=0,
             fill_opacity=0.9,
 
