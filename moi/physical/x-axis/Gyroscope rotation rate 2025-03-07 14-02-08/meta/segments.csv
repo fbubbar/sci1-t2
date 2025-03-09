@@ -1,0 +1,6 @@
+segment,start,end,keep,comment
+0, 5, 10, ,Physical Pendulum
+1, 26.5, 33, ,Physical Pendulum
+2, 95, 100, ,Physical Pendulum
+3, 112, 117, ,Physical Pendulum
+4, 113.5, 118.5, ,Physical Pendulum

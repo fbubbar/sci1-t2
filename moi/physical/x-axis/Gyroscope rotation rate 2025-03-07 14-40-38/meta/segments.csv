@@ -1,0 +1,19 @@
+segment,start,end,keep,comment
+0, 9, 15,, Physical Pendulum
+1, 9, 15,false, Physical Pendulum
+2, 31.5, 37.5,, Physical Pendulum
+3, 41, 47,, Physical Pendulum
+4, 62.5, 68.5,, Physical Pendulum
+5, 81, 88,, Physical Pendulum
+6, 94, 100,, Physical Pendulum
+7, 114, 120,, Physical Pendulum
+8, 132.5, 138.5,, Physical Pendulum
+9, 149, 155.5,, Physical Pendulum
+10, 172, 178,, Physical Pendulum
+11, 192, 198,, Physical Pendulum
+12, 212.5, 218.5,, Physical Pendulum
+13, 231.5, 237.5,, Physical Pendulum
+14, 252, 258,, Physical Pendulum
+15, 270, 276,, Physical Pendulum
+16, 288.5, 295,, Physical Pendulum
+17, 306, 312,, Physical Pendulum

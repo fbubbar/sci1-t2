@@ -8,7 +8,7 @@ import numpy as np
 rootpath = path.relpath(path.join(__file__, '../..'))
 
 
-def load_files(pat):
+def load_files(pat, pendulum=False):
     if isinstance(pat, str):
         pats = [pat]
     else:
@@ -16,7 +16,7 @@ def load_files(pat):
 
     csv_files = []
     for pat in pats:
-        csv_files.extend(glob(f'{rootpath}/data/{pat}/Gyroscope*/Raw Data.csv'))
+        csv_files.extend(glob(f"{rootpath}/{'moi/physical' if pendulum else 'data'}/{pat}/Gyroscope*/Raw Data.csv"))
 
     trials = []
     trials_meta = []
@@ -70,7 +70,7 @@ def process_csv(file):
             comment = get_or(segments, 'comment', i, None)
 
             # discard segments if specified
-            if not segments.keep.get(i, True):
+            if not segments.keep.get(i, True) or comment == "not a trial":
                 log.info(f'-> discarding segment {i}' )
                 continue
         else:
