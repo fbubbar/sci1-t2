@@ -15,8 +15,9 @@ def load_files(pat, pendulum=False):
         pats = pat
 
     csv_files = []
+    datadir = 'moi/physical' if pendulum else 'data'
     for pat in pats:
-        csv_files.extend(glob(f"{rootpath}/{'moi/physical' if pendulum else 'data'}/{pat}/Gyroscope*/Raw Data.csv"))
+        csv_files.extend(glob(f"{rootpath}/{datadir}/{pat}/Gyroscope*/Raw Data.csv"))
 
     trials = []
     trials_meta = []

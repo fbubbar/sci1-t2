@@ -5,6 +5,8 @@ from scipy.optimize import curve_fit
 def norm(x, amp, mu, sig):
     return amp * np.exp(-(x-mu)**2 / (2*sig**2))
 
+
+# run Fourier analysis on one trial and estimate uncertaintiess
 def get_freq(trial, plot_spectrum=False):
     wi = trial['Gyroscope x (rad/s)']
 
@@ -45,6 +47,7 @@ def get_freq(trial, plot_spectrum=False):
     return freq, dfreq, ptnr
 
 
+# run Fourier analysis on all series to find the periods
 def fourier_trial_freqs(trials, trials_meta, plot_spectra=False):
     period_data = pd.DataFrame(columns=['f', 'df', 'T', 'dT', 'ptnr'])
     for i, (trial, meta) in enumerate(zip(trials, trials_meta)):
@@ -65,6 +68,7 @@ def fourier_trial_freqs(trials, trials_meta, plot_spectra=False):
     return period_data
 
 
+# zero/extremum method: for use with intermediate axis data
 def point_method(trial, plot_points=False):
     wi = trial['Gyroscope x (rad/s)']
     time = trial['Time (s)']
@@ -108,6 +112,7 @@ def point_method(trial, plot_points=False):
     return T, dT
 
 
+# run the point method on all series to find the periods
 def point_trial_periods(trials, trials_meta, plot_points=False):
     period_data = pd.DataFrame(columns=['omega0', 'T', 'dT', 'rel_err'])
     for i, (trial, meta) in enumerate(zip(trials, trials_meta)):
@@ -129,4 +134,28 @@ def point_trial_periods(trials, trials_meta, plot_points=False):
         log.info(f"Skipping segment {j} of '{src}' ...")
 
     return period_data
+
+
+# zero method: for use with the moi pendulum data
+# mostly analogous to the `point_method`
+def zero_method(trials, axis):
+    diffs = []
+    for trial in trials:
+        wi = trial[axis]
+        time = trial['Time (s)']
+
+        end_indices = np.sign(wi).diff().fillna(0) != 0
+        start_indices = list(end_indices[1:]) + [False]
+
+        x1 = np.array(time[start_indices])
+        x2 = np.array(time[end_indices])
+        y1 = np.array(wi[start_indices])
+        y2 = np.array(wi[end_indices])
+        zero_times = x1 - y1*(x2-x1)/(y2-y1)
+        diffs = np.concatenate([diffs, np.diff(zero_times)])
+
+    log.info(f'finding period based on {len(diffs)} samples ...')
+    T = 2*np.mean(diffs)
+    dT = 2*np.std(diffs)
+    return T, dT
 
