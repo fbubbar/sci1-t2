@@ -29,25 +29,26 @@ class Ellipsoid(ThreeDScene):
 
         I = np.array([3, 2, 1])
         omega0 = np.array([0, 1, 0])
+
         E = 1/2 * np.dot(I, omega0**2)
 
         dims = np.sqrt(2 * E * I)
-        ellipsoid = self.make_ellipsoid(*dims)
+        ellipsoid = self.make_ellipsoid(*dims, op=0.5)
         self.add(ellipsoid)
 
         L = np.sqrt(np.dot(I**2, omega0**2))
-        sphere = self.make_sphere(L).set_fill(color=GREEN)
+        sphere = self.make_sphere(L+0.01, op=0.6).set_fill(color=GREEN)
         self.add(sphere)
 
-    def make_sphere(self, r):
-        return self.make_ellipsoid(r, r, r)
+    def make_sphere(self, r, op):
+        return self.make_ellipsoid(r, r, r, op)
 
-    def make_ellipsoid(self, a, b, c):
+    def make_ellipsoid(self, a, b, c, op):
         return Surface(
             checkerboard_colors=False,
-            resolution=(200, 200),
+            resolution=(100, 100),
             stroke_width=0,
-            fill_opacity=0.9,
+            fill_opacity=op,
 
             # parametric equations
             u_range=(0, 2 * PI),
@@ -58,4 +59,3 @@ class Ellipsoid(ThreeDScene):
                 c * np.cos(v)
             ])
         )
-
