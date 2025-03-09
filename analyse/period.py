@@ -131,13 +131,13 @@ def analytical_model(trial):
     denominator_k = I2 * (I1 - I2) * w20**2 + I3 * (I1 - I3) * w30**2
     
     k = w30 * np.sqrt(numerator_k / denominator_k)
-    print("k ", k)
+    #print("k ", k)
     numerator_b = (I3 - I2) * (I2 * (I1 - I2)) * w20**2 + I3 * (I1 - I3) * w30**2
     denominator_b = I1 * I2 * I3
-    print("num b", numerator_b)
-    print("denom, b", denominator_b)
+    #print("num b", numerator_b)
+    #print("denom, b", denominator_b)
     b = np.sqrt(numerator_b / denominator_b)
-    print("b ", b)
+    #print("b ", b)
     T = 4 * ellipk(k**2) / b
     return T
 
