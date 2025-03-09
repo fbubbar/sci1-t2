@@ -1,6 +1,7 @@
 from . import log, np, pd, plt
 from scipy.fftpack import fft, fftfreq
 from scipy.optimize import curve_fit
+from scipy.special import ellipk
 
 def norm(x, amp, mu, sig):
     return amp * np.exp(-(x-mu)**2 / (2*sig**2))
@@ -107,7 +108,10 @@ def point_method(trial, plot_points=False):
 
     return T, dT
 
-from scipy.special import ellipk
+
+# analytical model using the Jacobi elliptic functions
+# NOTE: because our I values are quite small with large relative 
+#       uncertainties, the results are not good!
 def analytical_model(trial):
     w1 = trial["Gyroscope z (rad/s)"]
     w2 = trial["Gyroscope x (rad/s)"]
@@ -116,6 +120,9 @@ def analytical_model(trial):
     w10 = w1.iloc[10]
     w20 = w2.iloc[10]
     w30 = w3.iloc[10]
+
+    # NOTE: this must be updated using the the new correct MOI 
+    #       values if this method is ever used again!
     I1 = 0.031165
     I3 = 0.029894
     I2 = 0.00161
