@@ -5,6 +5,7 @@
 #let ind = h(par_indent)
 
 #let eqr(r) = [(#ref(r, supplement: []))]
+#let prcit(r) = cite(r, form: "prose")
 
 #let mkcap = (sp, w, s) => it => block(width: w)[
   #set text(size: s)
