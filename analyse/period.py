@@ -5,8 +5,6 @@ from scipy.optimize import curve_fit
 def norm(x, amp, mu, sig):
     return amp * np.exp(-(x-mu)**2 / (2*sig**2))
 
-
-# run Fourier analysis on one trial and estimate uncertaintiess
 def get_freq(trial, plot_spectrum=False):
     wi = trial['Gyroscope x (rad/s)']
 
@@ -47,7 +45,6 @@ def get_freq(trial, plot_spectrum=False):
     return freq, dfreq, ptnr
 
 
-# run Fourier analysis on all series to find the periods
 def fourier_trial_freqs(trials, trials_meta, plot_spectra=False):
     period_data = pd.DataFrame(columns=['f', 'df', 'T', 'dT', 'ptnr'])
     for i, (trial, meta) in enumerate(zip(trials, trials_meta)):
@@ -68,7 +65,6 @@ def fourier_trial_freqs(trials, trials_meta, plot_spectra=False):
     return period_data
 
 
-# zero/extremum method: for use with intermediate axis data
 def point_method(trial, plot_points=False):
     wi = trial['Gyroscope x (rad/s)']
     time = trial['Time (s)']
@@ -111,6 +107,32 @@ def point_method(trial, plot_points=False):
 
     return T, dT
 
+from scipy.special import ellipk
+def analytical_model(trial):
+    w1 = trial["Gyroscope z (rad/s)"]
+    w2 = trial["Gyroscope x (rad/s)"]
+    w3 = trial["Gyroscope y (rad/s)"]
+    time = trial["Time (s)"]
+    w10 = w1.iloc[10]
+    w20 = w2.iloc[10]
+    w30 = w3.iloc[10]
+    I1 = 0.031165
+    I3 = 0.029894
+    I2 = 0.00161
+
+    numerator_k = I3 * (I1 - I3)
+    denominator_k = I2 * (I1 - I2) * w20**2 + I3 * (I1 - I3) * w30**2
+    
+    k = w30 * np.sqrt(numerator_k / denominator_k)
+    print("k ", k)
+    numerator_b = (I3 - I2) * (I2 * (I1 - I2)) * w20**2 + I3 * (I1 - I3) * w30**2
+    denominator_b = I1 * I2 * I3
+    print("num b", numerator_b)
+    print("denom, b", denominator_b)
+    b = np.sqrt(numerator_b / denominator_b)
+    print("b ", b)
+    T = 4 * ellipk(k**2) / b
+    return T
 
 # run the point method on all series to find the periods
 def point_trial_periods(trials, trials_meta, plot_points=False):
