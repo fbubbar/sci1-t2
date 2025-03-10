@@ -36,9 +36,9 @@ def get_freq(trial, plot_spectrum=False):
                                        p0=[dom_mag, dom_freq, 1.])
 
     if plot_spectrum:
-        plt.plot(xf, magnitudes, 'o', label='Freqency Spectrum')
+        plt.plot(xf, magnitudes, 'o', label='Freqency spectrum')
         norm_xs = np.linspace(xf[low_i], xf[high_i], 1000)
-        plt.plot(norm_xs, norm(norm_xs, _amp, freq, dfreq), label='Error Model')
+        plt.plot(norm_xs, norm(norm_xs, _amp, freq, dfreq), label='Error model')
         plt.xlabel('Frequency [Hz]')
         plt.ylabel('Magnitude')
         plt.show()

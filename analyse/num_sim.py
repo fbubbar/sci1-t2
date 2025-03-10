@@ -38,12 +38,12 @@ def simulate(trial, dt):
         # Update the angular velocities
         omega = omega + omega_dot * dt
 
-    plt.plot(times, primary_omega, label='Primary')
-    plt.plot(times, intermediate_omega, label='Intermediate')
-    plt.plot(times, tertiary_omega, label='Tertiary')
+    plt.plot(times, primary_omega, label='Primary Axis')
+    plt.plot(times, intermediate_omega, label='Intermediate Axis')
+    plt.plot(times, tertiary_omega, label='Tertiary Axis')
     plt.xlabel('Time (s)')
     plt.ylabel('Angular velocity (rad/s)')
-    plt.title('Simulated Angular Velocities')
+    plt.title('Simulated angular velocities')
     plt.legend()
     plt.show()
 

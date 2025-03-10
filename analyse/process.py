@@ -87,7 +87,7 @@ def process_csv(file):
     return trials, trials_meta
 
 
-def plot_trials_w(trials, trials_meta):
+def plot_trials_w(trials, trials_meta, include_omega=True):
     w_label = 'Angular Velocity (rad/s)'
     w_cols = [
         'Gyroscope x (rad/s)',
@@ -96,7 +96,7 @@ def plot_trials_w(trials, trials_meta):
         'Absolute (rad/s)',
     ]
     for i, t in enumerate(trials):
-        plot_trial(i, t, trials_meta[i], w_cols, w_label)
+        plot_trial(i, t, trials_meta[i], w_cols, w_label, with_absolute=include_omega)
 
 def plot_trials_L(trials, trials_meta):
     L_label = 'Angular momentum [kg m$^2$ s$^{-1}$]'
@@ -105,7 +105,7 @@ def plot_trials_L(trials, trials_meta):
         plot_trial(i, t, trials_meta[i], L_cols, L_label)
 
 
-def plot_trial(i, trial, meta, cols, ylabel):
+def plot_trial(i, trial, meta, cols, ylabel, with_absolute=True):
     title = f'Trial {i+1}'
     x, y, z, a = cols
 
@@ -116,19 +116,24 @@ def plot_trial(i, trial, meta, cols, ylabel):
         log.info(f'Comment: {comment}')
         title = f'{title}: {comment}'
 
-    # make the plot
-    plt.figure()
-    ax = trial.plot(
-        x='Time (s)',
-        y=[z, x, y, a], # Iz > Ix > Iy
-        color=['#4285f4', '#ea4335', '#fbbc04', 'black']
-    )
-    ax.legend([
+    y_axis = [z, x, y] # Iz > Ix > Iy
+    colours = ['#4285f4', '#ea4335', '#fbbc04']
+    legend = [
         'Primary Axis',
         'Intermediate Axis',
         'Tertiary Axis',
-        'Absolute'
-    ])
+    ]
+
+    if with_absolute:
+        y_axis.append(a)
+        colours.append('black')
+        legend.append('Absolute')
+
+    # make the plot
+    plt.figure()
+
+    ax = trial.plot(x='Time (s)', y=y_axis, color=colours)
+    ax.legend(legend)
     ax.set_ylabel(ylabel)
     plt.title(title)
     plt.show()
@@ -145,8 +150,8 @@ def fourier_plot_speed_vs_period(trials, period_data):
     period_data['omega0'] = [omega0s[idx] for idx in period_data.index]
 
     # make a plot
-    plt.title('Period of Unstable Motion')
-    plt.xlabel('Initial Angular Speed [rad/s]')
+    plt.title('Period of unstable motion')
+    plt.xlabel('Initial angular speed [rad/s]')
     plt.ylabel('Period [s]')
 
     plt.errorbar(period_data['omega0'], period_data['T'], 
@@ -158,8 +163,8 @@ def fourier_plot_speed_vs_period(trials, period_data):
 
 
 def plot_speed_vs_period(period_data):
-    plt.title('Period of Unstable Motion')
-    plt.xlabel('Initial Angular Speed [rad/s]')
+    plt.title('Period of unstable Motion')
+    plt.xlabel('Initial angular speed [rad/s]')
     plt.ylabel('Period [s]')
 
     plt.errorbar(period_data['omega0'], period_data['T'], 
@@ -171,7 +176,7 @@ def plot_speed_vs_period(period_data):
 
 def fit_model(period_data):
     def model(x, a, b):
-        return a * x + b
+        return a / x + b
     num_parameters = 2
     param_bounds=([-np.inf, -np.inf],[np.inf,np.inf])  
     initial_param=(0,0) 
@@ -186,26 +191,28 @@ def fit_model(period_data):
     for i in range(len(optimized_parameters)):
         log.info(f'Parameter #{i+1}: {optimized_parameters[i]:.6e} ± {parameter_errors[i]:.1e}, relative error: {parameter_errors[i]/optimized_parameters[i]:.2f}')
     # plot model
-    xForLine = np.linspace(0, max(speed)+0.5, 200)
+    min_x, max_x = min(speed) - 0.5, max(speed) + 0.5
+    xForLine = np.linspace(min_x, max_x, 200)
     yForLine = model(xForLine, *optimized_parameters)
     plt.errorbar(speed, period, yerr=period_err, fmt='o', markersize=3, capsize=2)
     plt.plot(xForLine, yForLine, label='Fit')
-    plt.xlabel('Initial Angular Speed [rad/s]')
+    plt.xlabel('Initial angular speed [rad/s]')
     plt.ylabel('Period [s]')
+    plt.xlim(min_x, max_x)
     plt.legend()
     plt.show()
     # residuals plot
     residuals = period - model(speed, *optimized_parameters)
     plt.errorbar(speed, residuals, yerr=period_err, fmt='o', markersize=3, capsize=2)
     plt.axhline(0, color='black', linewidth=1)
-    plt.xlabel('Initial Angular Speed [rad/s]')
+    plt.xlabel('Initial angular speed [rad/s]')
     plt.ylabel('Residuals [s]')
     plt.show()
     # chi squared
     n_dof = len(speed) - num_parameters -1
     ru = residuals/period_err
     chisq = np.sum(np.power(ru,2)) / n_dof
-    log.info(f'Chi squared: {chisq:.2f}')
+    log.info(f'chi^2: {chisq:.2f}')
 
 def filter_trials(trials, cutoff):
     filtered_trials = []
