@@ -136,6 +136,7 @@ def plot_trial(i, trial, meta, cols, ylabel, with_absolute=True):
     ax.legend(legend)
     ax.set_ylabel(ylabel)
     plt.title(title)
+    plt.savefig(f'{rootpath}/figs/{source}_{j}.svg')
     plt.show()
 
 
