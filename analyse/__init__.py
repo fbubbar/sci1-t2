@@ -36,8 +36,10 @@ def _ensure_figures_dir():
 def save_figure(name, force=False):
     if config['save_figures'] or force:
         _ensure_figures_dir()
-        t = int(time.time())
+        t = int(10 * time.time())
         figdir = path.join(config['rootpath'], 'figures')
         fname = f'{name}_{t}.svg'
-        plt.savefig(path.join(figdir, fname))
+        fpath = path.join(figdir, fname)
+        plt.savefig(fpath)
+        log.info(f"Figure saved to '{fpath}'")
 

@@ -84,8 +84,8 @@ def process_csv(file):
     return trials, trials_meta
 
 
-def plot_trials_w(trials, trials_meta, include_omega=True):
-    w_label = 'Angular Velocity (rad/s)'
+def plot_trials_w(trials, trials_meta, include_omega=True, manual_is=None):
+    w_label = 'Angular Velocity [rad/s]'
     w_cols = [
         'Gyroscope x (rad/s)',
         'Gyroscope y (rad/s)',
@@ -93,7 +93,8 @@ def plot_trials_w(trials, trials_meta, include_omega=True):
         'Absolute (rad/s)',
     ]
     for i, t in enumerate(trials):
-        plot_trial(i, t, trials_meta[i], w_cols, w_label, with_absolute=include_omega)
+        if manual_is: i_label = manual_is[i]
+        plot_trial(i_label, t, trials_meta[i], w_cols, w_label, with_absolute=include_omega)
 
 def plot_trials_L(trials, trials_meta):
     L_label = 'Angular momentum [kg m$^2$ s$^{-1}$]'
@@ -132,6 +133,7 @@ def plot_trial(i, trial, meta, cols, ylabel, with_absolute=True):
     ax = trial.plot(x='Time (s)', y=y_axis, color=colours)
     ax.legend(legend)
     ax.set_ylabel(ylabel)
+    ax.set_xlabel('Time [s]')
     plt.title(title)
     save_figure(f'trial_{i+1}')
     plt.show()
