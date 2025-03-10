@@ -175,11 +175,11 @@ def plot_speed_vs_period(period_data):
     plt.show()
 
 def fit_model(period_data):
-    def model(x, a, b):
-        return a / x + b
-    num_parameters = 2
-    param_bounds=([-np.inf, -np.inf],[np.inf,np.inf])  
-    initial_param=(0,0) 
+    def model(x, a, b, c):
+        return a/(x + b) + c
+    num_parameters = 3
+    param_bounds=([-np.inf, -np.inf, -np.inf],[np.inf, np.inf, np.inf])  
+    initial_param=(1,0, 0) 
     speed = period_data['omega0']
     period = period_data['T']
     period_err = period_data['dT']
