@@ -1,4 +1,4 @@
-from . import log, np, pd, plt
+from . import *
 from scipy.fftpack import fft, fftfreq
 from scipy.optimize import curve_fit
 from scipy.special import ellipk
@@ -41,6 +41,7 @@ def get_freq(trial, plot_spectrum=False):
         plt.plot(norm_xs, norm(norm_xs, _amp, freq, dfreq), label='Error model')
         plt.xlabel('Frequency [Hz]')
         plt.ylabel('Magnitude')
+        save_figure('fourier_spectrum')
         plt.show()
 
     return freq, dfreq, ptnr
@@ -104,6 +105,7 @@ def point_method(trial, plot_points=False):
 
         plt.xlabel('Time [s]')
         plt.ylabel('Angular Velocity [rad/s]')
+        save_figure('labelled_points')
         plt.show()
 
     return T, dT

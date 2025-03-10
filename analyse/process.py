@@ -1,11 +1,8 @@
 
-from . import log, pd, plt
+from . import *
 
 from glob import glob
-from os import path
 from scipy.optimize import curve_fit
-import numpy as np
-rootpath = path.relpath(path.join(__file__, '../..'))
 
 
 def load_files(pat, pendulum=False):
@@ -17,7 +14,7 @@ def load_files(pat, pendulum=False):
     csv_files = []
     datadir = 'moi/physical' if pendulum else 'data'
     for pat in pats:
-        csv_files.extend(glob(f"{rootpath}/{datadir}/{pat}/Gyroscope*/Raw Data.csv"))
+        csv_files.extend(glob(f"{config['rootpath']}/{datadir}/{pat}/Gyroscope*/Raw Data.csv"))
 
     trials = []
     trials_meta = []
@@ -136,6 +133,7 @@ def plot_trial(i, trial, meta, cols, ylabel, with_absolute=True):
     ax.legend(legend)
     ax.set_ylabel(ylabel)
     plt.title(title)
+    save_figure(f'trial_{i+1}')
     plt.show()
 
 
@@ -159,6 +157,7 @@ def fourier_plot_speed_vs_period(trials, period_data):
                  fmt='.', markersize=3, capsize=3)
 
     plt.legend()
+    save_figure('fourier_speed_vs_period')
     plt.show()
 
 
@@ -172,6 +171,7 @@ def plot_speed_vs_period(period_data):
                  fmt='o', markersize=3, capsize=2)
 
     plt.legend()
+    save_figure('speed_vs_period')
     plt.show()
 
 def fit_model(period_data):
@@ -200,6 +200,7 @@ def fit_model(period_data):
     plt.ylabel('Period [s]')
     plt.xlim(min_x, max_x)
     plt.legend()
+    save_figure('model_fit')
     plt.show()
     # residuals plot
     residuals = period - model(speed, *optimized_parameters)
@@ -207,6 +208,7 @@ def fit_model(period_data):
     plt.axhline(0, color='black', linewidth=1)
     plt.xlabel('Initial angular speed [rad/s]')
     plt.ylabel('Residuals [s]')
+    save_figure('model_residuals')
     plt.show()
     # chi squared
     n_dof = len(speed) - num_parameters -1
