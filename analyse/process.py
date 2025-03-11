@@ -164,7 +164,7 @@ def fourier_plot_speed_vs_period(trials, period_data):
 
 
 def plot_speed_vs_period(period_data):
-    plt.title('Period of unstable Motion')
+    plt.title('Period of unstable motion')
     plt.xlabel('Initial angular speed [rad/s]')
     plt.ylabel('Period [s]')
 
@@ -196,8 +196,10 @@ def fit_model(period_data):
     min_x, max_x = min(speed) - 0.5, max(speed) + 0.5
     xForLine = np.linspace(min_x, max_x, 200)
     yForLine = model(xForLine, *optimized_parameters)
-    plt.errorbar(speed, period, yerr=period_err, fmt='o', markersize=3, capsize=2)
-    plt.plot(xForLine, yForLine, label='Fit')
+    a, b, c = optimized_parameters
+    model_label = f'Model: $T = {a:.2f}/(\omega_0 + {b:.2f}\\,\\text{{s}}^{{-1}}) + {c:.3f}$ s'
+    plt.errorbar(speed, period, yerr=period_err, fmt='o', markersize=3, capsize=2, label='Measured')
+    plt.plot(xForLine, yForLine, label=model_label)
     plt.xlabel('Initial angular speed [rad/s]')
     plt.ylabel('Period [s]')
     plt.xlim(min_x, max_x)
@@ -206,10 +208,11 @@ def fit_model(period_data):
     plt.show()
     # residuals plot
     residuals = period - model(speed, *optimized_parameters)
-    plt.errorbar(speed, residuals, yerr=period_err, fmt='o', markersize=3, capsize=2)
+    plt.errorbar(speed, residuals, yerr=period_err, fmt='o', markersize=3, capsize=2, label='Residual')
     plt.axhline(0, color='black', linewidth=1)
     plt.xlabel('Initial angular speed [rad/s]')
     plt.ylabel('Residuals [s]')
+    plt.legend()
     save_figure('model_residuals')
     plt.show()
     # chi squared
