@@ -51,7 +51,7 @@
         gutter: 1em,
         ..authors.map(author => align(center)[
           #author.name \
-          #author.email
+          #link("mailto:" + author.email)[#author.email]
         ]),
       )
     )
@@ -63,7 +63,7 @@
     Professor, Department of Mathematics
 
     #v(3em)
-    March 12, 2025
+    March 14, 2025
 
     #sym.copyright Felix Bubbar and Leo Zhu, 2025
   ]
@@ -119,6 +119,11 @@
   show heading: set block(below: 1em)
   show heading.where(level: 1): set block(above: 2em)
 
+  show figure: it => {
+    v(0.5em)
+    it
+    v(0.5em)
+  }
   show figure.caption: mkcap(0em, 97%, 0.9em)
 
   body
