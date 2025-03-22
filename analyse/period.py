@@ -1,7 +1,6 @@
 from . import *
 from scipy.fftpack import fft, fftfreq
 from scipy.optimize import curve_fit
-from scipy.special import ellipk
 
 def norm(x, amp, mu, sig):
     return amp * np.exp(-(x-mu)**2 / (2*sig**2))
@@ -110,38 +109,6 @@ def point_method(trial, plot_points=False):
 
     return T, dT
 
-
-# analytical model using the Jacobi elliptic functions
-# NOTE: because our I values are quite small with large relative 
-#       uncertainties, the results are not good!
-def analytical_model(trial):
-    w1 = trial["Gyroscope z (rad/s)"]
-    w2 = trial["Gyroscope x (rad/s)"]
-    w3 = trial["Gyroscope y (rad/s)"]
-    time = trial["Time (s)"]
-    w10 = w1.iloc[10]
-    w20 = w2.iloc[10]
-    w30 = w3.iloc[10]
-
-    # NOTE: this must be updated using the the new correct MOI 
-    #       values if this method is ever used again!
-    I1 = 0.031165
-    I3 = 0.029894
-    I2 = 0.00161
-
-    numerator_k = I3 * (I1 - I3)
-    denominator_k = I2 * (I1 - I2) * w20**2 + I3 * (I1 - I3) * w30**2
-    
-    k = w30 * np.sqrt(numerator_k / denominator_k)
-    #print("k ", k)
-    numerator_b = (I3 - I2) * (I2 * (I1 - I2)) * w20**2 + I3 * (I1 - I3) * w30**2
-    denominator_b = I1 * I2 * I3
-    #print("num b", numerator_b)
-    #print("denom, b", denominator_b)
-    b = np.sqrt(numerator_b / denominator_b)
-    #print("b ", b)
-    T = 4 * ellipk(k**2) / b
-    return T
 
 # run the point method on all series to find the periods
 def point_trial_periods(trials, trials_meta, plot_points=False):
