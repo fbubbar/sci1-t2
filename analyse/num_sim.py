@@ -87,8 +87,9 @@ def get_freq(intermediate_omega, dt):
     # calculate peak-to-noise ratio
     noise_mag = np.delete(magnitudes, dom_i)
     noise_level = np.mean(noise_mag)
-    peak_to_noise_ratio = dom_mag / noise_level if noise_level != 0 else np.inf
-    period = 1 / dom_freq if dom_freq != 0 else np.inf
+
+    peak_to_noise_ratio = dom_mag / noise_level
+    period = 1 / dom_freq
 
     return dom_freq, period, peak_to_noise_ratio
 
