@@ -94,13 +94,14 @@ def plot_trials_w(trials, trials_meta, include_omega=True, manual_is=None):
     ]
     for i, t in enumerate(trials):
         if manual_is: i_label = manual_is[i]
-        plot_trial(i_label, t, trials_meta[i], w_cols, w_label, with_absolute=include_omega)
+        plot_trial(i_label or i, t, trials_meta[i], w_cols, w_label, with_absolute=include_omega)
 
-def plot_trials_L(trials, trials_meta):
+def plot_trials_L(trials, trials_meta, manual_is=None):
     L_label = 'Angular momentum [kg m$^2$ s$^{-1}$]'
     L_cols = ['Lx', 'Ly', 'Lz', 'L']
     for i, t in enumerate(trials):
-        plot_trial(i, t, trials_meta[i], L_cols, L_label)
+        if manual_is: i_label = manual_is[i]
+        plot_trial(i_label or i, t, trials_meta[i], L_cols, L_label)
 
 
 def plot_trial(i, trial, meta, cols, ylabel, with_absolute=True):
