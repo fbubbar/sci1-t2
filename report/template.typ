@@ -63,7 +63,7 @@
     Professor, Department of Mathematics
 
     #v(3em)
-    March 14, 2025
+    March 18, 2025
 
     #sym.copyright Felix Bubbar and Leo Zhu, 2025
   ]
