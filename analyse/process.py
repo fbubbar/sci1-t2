@@ -201,6 +201,7 @@ def fit_model(period_data):
     model_label = f'Model: $T = {a:.2f}/(\omega_0 + {b:.2f}\\,\\text{{s}}^{{-1}}) + {c:.3f}$ s'
     plt.errorbar(speed, period, yerr=period_err, fmt='o', markersize=3, capsize=2, label='Measured')
     plt.plot(xForLine, yForLine, label=model_label)
+    plt.title('Predicting the Precession Period')
     plt.xlabel('Initial angular speed [rad/s]')
     plt.ylabel('Period [s]')
     plt.xlim(min_x, max_x)
@@ -211,6 +212,7 @@ def fit_model(period_data):
     residuals = period - model(speed, *optimized_parameters)
     plt.errorbar(speed, residuals, yerr=period_err, fmt='o', markersize=3, capsize=2, label='Residual')
     plt.axhline(0, color='black', linewidth=1)
+    plt.title('Model Residuals')
     plt.xlabel('Initial angular speed [rad/s]')
     plt.ylabel('Residuals [s]')
     plt.legend()
