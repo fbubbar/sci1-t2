@@ -13,10 +13,12 @@
 
 #let vbu(x) = $vb(upright(#x))$
 
+#let ax = link(<appendix>)[Appendix]
+
 
 = Abstract
 
-The intermediate axis theorem states that asymmetric top will undergo an unstable flipping motion when placed in torque-free rotation about any axis close to its second principal axis. While this phenomenon is formally well-understood, there exists little empirical research confirming many aspects of the relevant mathematical theory. We conducted gyroscopic measurements of this effect and compared the results to numerical solutions of the Euler rotation equations. We found that the numerical simulations matched the empirical data well despite measurable effects due to external air drag torques. In particular, the period of unstable motion could consistently be predicted within 20% from the initial conditions. We demonstrated that the period of the unstable motion is inversely related to the initial angular velocity ($chi^2 = 1.08$, $p = "TODO"$). A separate challenge with the intermediate axis theorem is that it is difficult to explain intuitively. We have simplified and reformulated existing attempts at such to develop a visual explanation of the phenomenon targeted at introductory physics students.
+The intermediate axis theorem states that an asymmetric top will undergo an unstable flipping motion when placed in torque-free rotation about any axis close to its second principal axis. While this phenomenon is formally well-understood, there exists little empirical research confirming many aspects of the relevant mathematical theory. We conducted gyroscopic measurements of this effect and compared the results to numerical solutions of the Euler rotation equations. We found that the numerical simulations matched the empirical data well despite measurable effects due to external air drag torques. In particular, the period of precession could consistently be predicted within 20% from the initial conditions. We demonstrated that the precession period is inversely related to the initial angular velocity ($chi^2 = 1.08$). A separate challenge with the intermediate axis theorem is that it is difficult to explain intuitively. We have simplified and reformulated existing attempts at such to develop a visual explanation of the phenomenon targeted at introductory physics students.
 
 
 #pagebreak()
@@ -45,9 +47,9 @@ An alternative explanation in terms of conservation laws dates back to #prcit(<p
 
 #ind Consider a rigid object with principal moments of inertia $I_1$, $I_2$, and $I_3$ rotating freely in space. Its kinetic energy can be separated into three parts corresponding to the rotation about each axis: $
   K = 1/2 I_1 omega_1^2 + 1/2 I_2 omega_2^2 + 1/2 I_3 omega_3^2 pads.
-$<krot> Similarly, we can break the angular momentum vector about the centre of mass into components according to $
+$<krot> Similarly, we can break the angular momentum vector $vbu(L)$ about the centre of mass into components according to $
   L_1^2 + L_2^2 + L_3^2 = L^2 pads.
-$<momentum_ellipsoid> Recalling that $L = I omega$ along each axis, we can also write #eqr(<krot>) in terms of the angular momentum to find that $
+$<momentum_ellipsoid> where $L = abs(vbu(L))$. Recalling that $L_r = I_r omega_r$ along each axis $vbu(r)$, we can also write #eqr(<krot>) in terms of the angular momentum to find that $
   L_1^2 / I_1 + L_2^2 / I_2 + L_3^2 / I_3 = 2K pads.
 $<energy_ellipsoid>
 
@@ -110,48 +112,35 @@ We can now think about rotational phenomena using this geometry. For a symmetric
 
 #ind Many flips about the intermediate axis were performed using a 27" tennis racquet. An iPhone 12 was mounted to the centre of the strings using several zip-ties and three-axis angular velocity data were recorded using the phyphox app @phyphox. Segments corresponding to successful flips were then manually isolated from the data. 
 
+In order to determine whether angular momentum was conserved, we measured the moments of inertia to obtain $L$-$omega$ data as described in the #ax.
+
 
 #v(1em)
 == Numerical Simulation
 
-#ind Euler's rotation equations describe the angular velocity of a rigid body in the rotating reference frame fixed to its three principal axes $(vbu(r_1), vbu(r_2), vbu(r_3))$. In particular, $
-  vbu(I) vbu(alpha) + vbu(omega) cprod (vbu(I) vbu(omega)) = vbu(tau) pads,
-$<euler_eqs> where $vbu(I)$ is the moment of inertia tensor. The eigenvalues of $vbu(I)$ are the principal moments of inertia $I_1$, $I_2$, and $I_3$, and so in absence of external torques #eqr(<euler_eqs>) becomes $
+#ind Euler's rotation equations describe the angular velocity of a rigid body in the rotating reference frame fixed to its three principal axes $(vbu(r_1), vbu(r_2), vbu(r_3))$. In particular, when external torques are zero, the Euler equations become $
   alpha_1 = omega_2 omega_3 (I_2 - I_1) \/ I_3 \
   alpha_2 = omega_1 omega_3 (I_1 - I_3) \/ I_2 \
   alpha_3 = omega_1 omega_2 (I_3 - I_2) \/ I_1
-$ <componentwise> when separated into components @goldstein_classical_2002. These equations can be solved analytically @peterson_eulers_2021, but a numerical simulation is equivalent @ono_comprehensive_2017 and easier for our purposes. We compared our empirical $omega$ data to an Euler method simulation of #eqr(<componentwise>) with the measured initial conditions to assess the accuracy of the model.
+$<componentwise> when separated into components @goldstein_classical_2002. These equations can be solved analytically @peterson_eulers_2021, but a numerical simulation is a very good approximation @ono_comprehensive_2017 and easier for our purposes. We compared our empirical $omega$ data to an Euler method simulation of #eqr(<componentwise>) with the measured initial conditions to assess the accuracy of the model.
 
 #v(1em)
 == Modelling the Period
 
-#ind The period $T$ of the unstable motion describes the time it takes for the top's angular momentum to complete a full loop on the intersection curve shown in @intermediate_axis_ellipsoid. The value of $T$ for each trial was determined by identifying the zeroes and local extrema of the empirical $omega_2$ series. As shown in @algorithm, the horizontal distance $Delta t$ between each pair of adjacent labelled points corresponds to one quarter of the period of unstable motion. The uncertainty in the period was estimated from the standard deviation of $Delta t$. Trials with fewer than one complete period were dropped.
+#ind The precession period $T$ of the unstable motion describes the time it takes for the top's angular momentum to complete a full loop on the intersection curve shown in @intermediate_axis_ellipsoid. The value of $T$ for each trial was determined by identifying the zeroes and local extrema of the empirical $omega_2$ series. As shown in @algorithm, the horizontal distance $Delta t$ between each pair of adjacent labelled points corresponds to one quarter of the precession period. The uncertainty in $T$ was estimated from the standard deviation of $Delta t$. Trials with fewer than one complete period were dropped.
 
 #figure(
   image("figs/period_analysis.png", width: 90%),
   caption: short-caption(
-    [Identifying the unstable period from the $omega_2$-$t$ graph],
-    [Using interpolation to identify zeroes (blue) and a moving average to identify local minima (red) and maxima (green), we labelled each $omega_2$-$t$ graph to calculate the period of unstable motion.]
+    [Identifying the precession period from the $omega_2$-$t$ graph],
+    [Using interpolation to identify zeroes (blue) and a moving average to identify local minima (red) and maxima (green), we labelled each $omega_2$-$t$ graph to calculate the precession period.]
   )
 ) <algorithm>
 
-#ind The analytical formula for the period of unstable motion is quite complex and depends on $vbu(I)$ as well as the magnitude and direction of the initial angular velocity $vbu(omega_0)$ @landau_mechanics_1969. However, using Fourier analysis with our numerical model, we predicted that the period of motion would change inversely with the initial angular speed for initial conditions sufficiently close to pure rotation about $vbu(r_2)$. We compared the empirical $T$ and $omega_0$ data to investigate this hypothesis. We omitted any trials where $omega_1$ and $omega_3$ were too large to be consistent with the model assumption that the initial rotation is mostly about $vbu(r_2)$. Specifically, we allowed only trials for which $
+#ind The analytical formula for the precession period is quite complex and depends on the moments of inertia $(I_1, I_2, I_3)$ as well as the magnitude and direction of the initial angular velocity $vbu(omega_0)$ @landau_mechanics_1969. Using Fourier analysis with our numerical model, we predicted that the precession period would change inversely with the initial angular speed for initial conditions sufficiently close to pure rotation about $vbu(r_2)$. We compared the empirical $T$ and $omega_0$ data to investigate this hypothesis. We omitted any trials where $omega_1$ and $omega_3$ were too large to be consistent with the model assumption that the initial rotation is mostly about $vbu(r_2)$. Specifically, we allowed only trials for which $
   max(omega_1, omega_3) < theta.alt max(omega_2)
 $<labe> using a threshold value of $theta.alt = 110%$, determined heuristically from a variety of $omega$-$t$ graphs.
 
-
-#v(1em)
-== Conservation of Angular Momentum
-
-#ind In order to determine whether angular momentum is  conserved in the intermediate axis theorem, we measured the the moments of inertia of the racquet-phone system. We determined $I_3$ from the period of a torsional pendulum $
-  T = (kappa T^2) / (4 pi^2)
-$ made with fishing line, treating the phone as a box of uniform density and known mass to determine the torsional constant $
-  kappa = (4 pi^2 I_"phone") / T_"phone"^2
-$ in a separate experiment. To determine $I_1$ and $I_2$, we devised a physical pendulum using a dowel and determined the momentum of inertia from the period, similarly to #box[#cite(<goodwill_dynamics_2002>, form: "prose")]. However, we used phyphox with a labelling algorithm analogous to that in @algorithm to determine the period. The rotational inertia about the butt of the racquet was then used to find $I_1$ and $I_2$ about the centre of mass using $
-  I = I_"butt" - Delta I pads, bigsp Delta I = (m_"racquet" + m_"phone") r_"CM"^2
-$ from the parallel axis theorem. The mass of the dowel was ignored since its contribution to $I$ was negligible.  We then applied $L = I omega$ to each axis of the $omega$-$t$ data to estimate the angular momentum $
-  norm(vbu(L)) = sqrt(L_1^2 + L_2^2 + L_3^2)
-$ over time. Figures of the experimental pendulum setups are given in the #link(<appendix>)[Appendix]
 
 #pagebreak(weak: true)
 = Results
@@ -160,7 +149,7 @@ $ over time. Figures of the experimental pendulum setups are given in the #link(
 
 #ind A total of 113 trials were performed using the racquet-phone system and gyroscopic data were recorded for a variety of initial conditions. One such trial is shown in @example_gyro. We then ran the numerical simulation using the initial conditions measured in each trial to qualitatively assess the accuracy of the model. The vast majority of cases, the results were remarkably similar, as shown in @empirical_vs_numerical. In many cases, however, the numerical simulation reversed the roles of the primary and tertiary axes, as shown in @reversed_axes.
 
-#v(1em)
+#v(2em)
 #figure(
   image("figs/trial_19.svg", width: 90%), 
   caption: short-caption(
@@ -184,6 +173,8 @@ $ over time. Figures of the experimental pendulum setups are given in the #link(
   )
 ) <empirical_vs_numerical>
 
+#v(4em)
+
 #figure(
   grid(columns: 2, gutter: -1.5em,
     image("figs/trial_52.svg"),
@@ -198,11 +189,145 @@ $ over time. Figures of the experimental pendulum setups are given in the #link(
 
 ]
 
-// #v(1em)
 #pagebreak()
-== Moments of Inertia
+== Conservation of Angular Momentum 
 
-#ind Calibration of the torsional pendulum gave a torsional constant of #box[$kappa = unit((1.347 plus.minus 0.050) times 10^(-6), N dot m)$] from the values given in @torsional_calibration. Uncertainties in the phone mass and density were assumed to be negligible compared to the uncertainty in the period. Results of the torsional and physical pendulum trials are shown in @pendulum_data.  
+#ind The data show that angular momentum decreased  slowly over time, as shown in @angular_momentum_decay. Very subtle "bumps" are visible near the extrema of $omega_1$. We calculated the average net torque for each trial and in every case it was a small negative value, as shown in @torque_histogram.
+
+#v(-1em)
+#figure(
+  image("figs/trial_15.svg", height: 39.6%), 
+  caption: short-caption(
+    [Example of angular momentum decay],
+    [The magnitude of angular momentum was roughly constant but decayed slowly over time.]
+  )
+) <angular_momentum_decay>
+
+#v(-2em)
+
+#figure(
+  image("figs/avg_net_torques.svg", height: 39.6%), 
+  caption: short-caption(
+    [Average net torques on the racquet],
+    [The average net torque experienced by the racquet-phone system. \ In all cases this value was small and negative. The mean value was $unit(-0.048 ± 0.026, N/**/space.narrow/**/m)$.]
+  )
+) <torque_histogram>
+
+
+== The Period of Precession
+
+#ind We compared the empirical precession period to that predicted by a Fourier analysis of the simulation using the same initial conditions. The  relative errors are depicted in @period_error, and the average error was 14.8% using this method. An example of a trial where the error is large is shown in @error_trial.
+
+The predicted inverse relationship $T = a\/(omega_0 + b) + c$ between the period and initial angular speed was tested on the data after filtering for initial conditions close to $vbu(r_2)$-rotation. The parameters $a$, $b$, and $c$ have been introduced to scale and translate the inverse relationship as needed. The results of the fit are shown in @model_fit. The best-fit model parameters are #box[$a = 11.85$], #box[$b = unit(2.30, s^(-1))$], and #box[$c = unit(0.047, s)$], and the model is a good fit with $chi^2 = 1.08$ on the 90 filtered trials. 
+
+#figure(
+  image("figs/period_error.svg", width: 80%),
+  caption: short-caption(
+    [Relative error in the numerical period prediction],
+    [Using the numerical simulation to predict the precession period from $vbu(omega_0)$ resulted in relative errors consistently below 20%. In a few cases, however, the error was very large.]
+  )
+) <period_error>
+
+#figure(
+  [
+    #grid(
+      columns: 1,
+      image("figs/error.svg", width: 95%),
+      image("figs/error_sim.svg", width: 95%)
+    )
+    #v(0.5em)
+  ],
+  caption: short-caption(
+    [Example trial with a large prediction error],
+    [Starting from the same initial conditions, in this case \ the numerical model poorly predicts the period of precession.]
+  )
+) <error_trial>
+
+#figure(
+  [
+    #grid(
+      columns: 1, 
+      row-gutter: -0.4em,
+      image("figs/model.svg", height: 47%),
+      image("figs/residuals.svg", height: 47%)
+    )
+    #v(0.5em)
+  ],
+  caption: short-caption(
+    [Modelling the precession period from $omega_0$],
+    [The filtered period data were fitted against the initial angular velocity \ using a three-parameter inverse model, as shown in the legend. The residuals \ appear random and the model is a good fit with $chi^2 = 1.08$.]
+  )
+) <model_fit>
+
+
+#pagebreak(weak: true)
+= Discussion
+
+#ind We found that a numerical simulation using Euler's rotation equations very closely matched the empirical gyroscopic data for intermediate axis throws given the same initial conditions. The numerical simulation also predicted the precession period well, as shown in @period_error. In a few cases, however, the motion was very sensitive to initial conditions and the simulation had large errors. Based on testing with the numerical simulation, we predicted that the precession period would be inversely related to the initial angular speed. Based on 90 trials of tennis racquet throws, a three-parameter inverse model was found to be a good fit for our data. The physical significance of $a$ is a proportionality constant which affects how quickly the period decays as $omega_0$ increases. However, the significance of $b$ and $c$ are unclear because they imply that the motion is periodic when $omega_0 = 0$ and nonzero when $omega_0 -> oo$, respectively. This suggests that the present model may not hold in low- or high-$omega$ regimes.
+
+It is worth noting that the measured primary and intermediate moments of inertia were very similar (_see_ #ax). Even so, we still clearly observed the unstable motion in almost every racquet toss. This indicates that our moments were sufficiently different for the racquet to behave as asymmetric top. The nature of the threshold between asymmetric and symmetric top behaviour is unclear to us and remains a topic for future investigation.
+
+Using these moments of inertia, we investigated the conservation of angular momentum in the context of intermediate axis rotations. As shown in @period_error, the net change in angular momentum was always negative and small compared to the initial angular momentum. Our model assumed that the racquet was rotating freely, but clearly there were measurable effects due to external torque. In the air, the racquet was only subject to gravitational and air drag forces. Gravity acts on the racquet's centre of mass and therefore does not exert a torque. However, the drag force does exert a torque because the racquet's aerial cross-section is asymmetric. This is consistent with both the size and direction of the measured torque. Given the small size of these effects, we do not think the model accuracy was significantly impacted by the effect of air drag.
+
+Whereas only we studied effects in the frame of the rotating body, analysis of the motion in a stationary frame involves the use of Euler angles @ashbaugh_twisting_1991. In this context, the precession period is not well-defined because the direction and magnitude of $vbu(L)$ are both conserved. Given these differences, further research can be done to establish correspondence between our results and their significance in the stationary frame.
+
+Intermediate axis phenomena are not just curious examples; they have important implications in rocketry, where millions of dollars have been wasted on satellites that began to rotate unstably in space @muller_bizarre_2019. An understanding of these dynamics is also fundamental to predict the behaviour of certain asteroids and moons in the solar system @harris_tumbling_1994. We hope that our research has shed some light on these applications, too.
+
+
+= Conclusion
+
+#ind We compared numerical predictions from Euler's rotation equations to empirical gyroscope data for the rotation of an asymmetric top about its intermediate axis. The data indicate that the model is a good fit. Using measured moments of inertia, we verified that angular momentum is conserved except for small measurable effects due to external drag moments. The numerical model consistently predicted the period of unstable motion within 20% and further analysis revealed an inverse relationship ($chi^2 = 1.08$) between the unstable period and initial angular speed in the body frame. We also provided an intuitive explanation of the intermediate axis theorem using only basic physical principles and geometry to convey the origin of this effect to introductory physics students. 
+
+
+= Acknowledgements
+
+We appreciate the help of all those who proofread the initial drafts of the paper, including Alena Wang, Jack Honeyman, Keanu Chan, and [TODO]. We are indebted to Keanu Chan for suggesting the use of zip-ties, which saved a lot of time collecting data. Lastly, we are grateful to Brian Marcus for his mentorship and support with this project.
+
+= Materials
+
+All data, source code, and other materials used for this project are available from https://github.com/fbubbar/sci1-t2.
+
+#bibliography("works.bib", style: "apa.csl", title: "Reference List")
+
+
+#pagebreak(weak: true)
+= Appendix: Moments of Inertia <appendix>
+
+== Method
+
+#ind Recall that $I_1$, $I_2$, and $I_3$ correspond to the primary, intermediate, and tertiary moments of inertia of the racquet-phone system. We determined $I_3$ from the period of a torsional pendulum $
+  I_3 = (kappa T^2) / (4 pi^2)
+$ made with fishing line, treating the phone as a box of uniform density and known mass to determine the torsional constant $
+  kappa = (4 pi^2 I_"phone") / T_"phone"^2
+$ in a separate experiment. To determine $I_1$ and $I_2$, we devised a physical pendulum using a dowel and determined the moment of inertia from the period. We adapted the method of #box[#cite(<goodwill_dynamics_2002>, form: "prose")], using phyphox with a labelling algorithm analogous to the one shown in @algorithm to determine the period. The rotational inertia about the butt of the racquet was then used to find $I_1$ and $I_2$ about the centre of mass using $
+  I = I_"butt" - Delta I pads, bigsp Delta I = (m_"racquet" + m_"phone") r_"CM"^2
+$ from the parallel axis theorem. The mass of the dowel was ignored since its contribution to $I$ was negligible.  We then applied $L = I omega$ to each axis of the $omega$-$t$ data to estimate the angular momentum $
+  norm(vbu(L)) = sqrt(L_1^2 + L_2^2 + L_3^2)
+$ over time. Figures of the experimental pendulum setups are shown below.
+
+#grid(
+  columns: 2,
+  column-gutter: 1em,
+  [#figure(
+    image("figs/physical_pendulum.jpg"),
+    caption: short-caption(
+      [Image of the physical pendulum setup],
+      [Image of the physical pendulum setup. The tennis racquet was attached to a dowel using duct tape and set in oscillatory motion.]
+    )
+  ) <physical_pendulum_setup>],
+  [#figure(
+    box(height: 40%)[TODO: torsional pendulum],
+    caption: short-caption(
+      [Image of the torsional pendulum setup],
+      [Image of the torsional pendulum setup. The racquet was suspended using fishing line with a known torsional constant and allowed to rotate about the axis of the fishing line.]
+    )
+  ) <torsional_pendulum_setup>],
+)
+
+#v(1em)
+== Results
+
+#ind Calibration of the torsional pendulum determined a torsional constant of #box[$kappa = unit((1.347 plus.minus 0.050) times 10^(-6), N dot m)$] from the values given in @torsional_calibration. Uncertainties in the phone mass and density were assumed to be negligible compared to the uncertainty in the period. 
 
 #figure(
   table(
@@ -217,6 +342,9 @@ $ over time. Figures of the experimental pendulum setups are given in the #link(
     [Parameters used for the torsional pendulum calibration.]
   )
 ) <torsional_calibration>
+
+The results of the torsional and physical pendulum trials are shown in @pendulum_data below. 
+
 
 #let gm2 = $"g" dot "m"^2$
 #figure(
@@ -235,111 +363,7 @@ $ over time. Figures of the experimental pendulum setups are given in the #link(
 ) <pendulum_data>
 #v(1em)
 
-#ind Using these moments of inertia, we were able to determine the angular momentum of the racquet from the gyroscopic data. The data show that angular momentum decreased very slowly over time, as shown in @angular_momentum_decay. Some bumps are visible coinciding with the extrema of $omega_1$ and $omega_3$. We calculated the average net torque for each trial and in every case it was a small negative value, as shown in @torque_histogram.
+#cite(<taraborrelli_recommendations_2019>, form: "prose") report values on the same order of magnitude for a tennis racquet alone, although it is difficult to compare any further because the addition of the phone nearly doubles the mass of the system. From @pendulum_data it is apparent that uncertainty using the torsional pendulum method was significantly lower than that of the physical pendulum method. Although the errors involved in physical pendulum period are low, the parallel axis theorem requires a subtraction which substantially increases the relative uncertainty. Unfortunately, it was not feasible to construct a unifilar torsional pendulum for the primary and intermediate axis measurements, but future moment of inertia estimates could improve measurement uncertainty by using a trifilar pendulum.
 
 
-#figure(
-  image("figs/trial_14.svg", height: 44%), 
-  caption: short-caption(
-    [Example of angular momentum decay],
-    [The magnitude of angular momentum was roughly constant but decayed slowly over time.]
-  )
-) <angular_momentum_decay>
 
-
-#figure(
-  image("figs/avg_net_torques.svg", height: 44%), 
-  caption: short-caption(
-    [Average net torques on the racquet],
-    [The average net torque experienced by the racquet-phone system. \ In all cases this value was small and negative. The mean value was $unit("TODO", N/**/space.narrow/**/m)$.]
-  )
-) <torque_histogram>
-
-
-== The Period of Motion
-
-#ind We compared the empirical period of unstable motion to that predicted by a Fourier analysis of the simulation using the same initial conditions. Excepting a few outliers, the relative error was consistently less than 20% using this method, as depicted in @period_error.
-
-The predicted inverse relationship $T = a\/(omega_0 + b) + c$ between the period and initial angular speed was tested on the data after filtering for initial conditions close to $vbu(r_2)$-rotation. The parameters $a$, $b$, and $c$ have been introduced to scale and translate the inverse relationship as needed. The results of the fit are shown in @model_fit. The best-fit model parameters are #box[$a = 11.85$], #box[$b = unit(2.30, s^(-1))$], and #box[$c = unit(0.047, s)$], and the model is a good fit with $chi^2 = 1.08$ on the 90 filtered trials. [TODO: determine $p$-value?] [TODO: comment on data points with infinite uncertainty?]
-
-
-#figure(
-  image("figs/period_error.svg", width: 80%),
-  caption: short-caption(
-    [Relative error in the numerical period prediction],
-    [Using the numerical simulation to predict the period of unstable motion from $vbu(omega_0)$ resulted in relative errors consistently below 20%. In a few cases, however, the error was very large.]
-  )
-) <period_error>
-
-#figure(
-  [
-    #grid(
-      columns: 1, 
-      row-gutter: -0.4em,
-      image("figs/model.svg", height: 47%),
-      image("figs/residuals.svg", height: 47%)
-    )
-    #v(0.5em)
-  ],
-  caption: short-caption(
-    [Modelling the period from the initial angular momentum],
-    [The filtered period data were fitted against the initial angular velocity \ using a three-parameter inverse model, as shown in the legend. The residuals \ appear random and the model is a good fit with $chi^2 = 1.08$.]
-  )
-) <model_fit>
-
-
-#pagebreak(weak: true)
-= Discussion
-
-#ind We found that a numerical simulation using Euler's rotation equations very closely matched the empirical gyroscopic data for intermediate axis throws given the same initial conditions. The numerical simulation also predicted the period of the unstable motion relatively well, as shown in @period_error. However, [TODO: explain outliers]. Based on testing with the numerical simulation, we predicted that the period of unstable motion would be inversely related to the initial angular speed. Based on 90 trials of tennis racquet throws, a three-parameter inverse model was found to be a good fit for our data. 
-
-We also measured the moments of inertia of the racquet-phone system. #cite(<taraborrelli_recommendations_2019>, form: "prose") report values on the same order of magnitude for a tennis racquet alone, although it is difficult to compare further because the addition of the phone nearly doubles the mass of the system. From @pendulum_data it is apparent that uncertainty using the torsional pendulum method was significantly lower than that of the physical pendulum method. Although the errors involved in physical pendulum period are low, the parallel axis theorem requires a subtraction which substantially increases the relative uncertainty. Unfortunately, it was not feasible to construct a unifilar torsional pendulum for the primary and secondary axis measurements, but future moment of inertia estimates could improve measurement uncertainty by using a trifilar pendulum.
-
-It is worth noting that the measured primary and secondary moments of inertia were very similar. Even so, we still clearly observed the unstable motion in almost every racquet toss. This indicates that our moments were sufficiently different for the racquet to behave as asymmetric top. The nature of the threshold between asymmetric and symmetric top behaviour is unclear to us and remains a topic for future investigation.
-
-Using these moments of inertia, we investigated the conservation of angular momentum in the context of intermediate axis rotations. As shown in @period_error, the net change in angular momentum was always negative and quite small compared to the initial angular momentum. Our model assumed that the racquet was rotating freely, but clearly there were measurable effects due to external torque. In the air, the racquet was only subject to gravitational and air drag forces. Gravity acts on the racquet's centre of mass and therefore does not exert a torque. However, the drag force does exert a torque because the racquet's aerial cross-section is asymmetric. This is consistent with the fact that the measured torque was always small and negative, since the drag moment always opposes the direction of angular velocity. Given the small size of these effects, we do not think the model accuracy was significantly impacted by the effect of air drag.
-
-Whereas we studied only effects in the frame of the rotating body, analysis of the motion in a stationary frame involves the use of Euler angles @ashbaugh_twisting_1991. In this context, the unstable period is not well-defined because the direction and magnitude of $vbu(L)$ are both conserved. Given these differences, further research can be done to establish correspondence between our results and their significance in the stationary frame.
-
-Intermediate axis phenomena are not just curious examples; they have important implications in rocketry, where millions of dollars have been wasted on satellites that began to rotate unstably in space @muller_bizarre_2019. An understanding of these dynamics is also fundamental to predict the behaviour of certain asteroids and moons in the solar system @harris_tumbling_1994. We hope that our research has shed some light on these applications, too.
-
-
-= Conclusion
-
-#ind We compared numerical predictions from Euler's rotation equations to empirical gyroscope data for the rotation of an asymmetric top about its intermediate axis. The data indicate that the model is a good fit. Using measured moments of inertia, we verified that angular momentum is conserved except for small measurable effects due to external drag moments. The numerical model consistently predicted the period of unstable motion within 20% and further analysis revealed an inverse relationship ($chi^2 = 1.08$, $p = "TODO"$) between the unstable period and initial angular speed in the body frame. We also provided an intuitive explanation of the intermediate axis theorem using only basic physical principles and geometry to convey the origin of this effect to introductory physics students. 
-
-
-#pagebreak()
-= Acknowledgements
-
-We appreciate the help of all those who proofread the initial drafts of the paper, including Jack Honeyman, Keanu Chan, and [TODO]. We are indebted to Keanu Chan for suggesting the use of zip-ties, which saved a lot of time collecting data. Lastly, we are grateful to Brian Marcus for his mentorship and support with this project.
-
-#v(2em)
-= Materials
-
-All data, source code, and other materials used for this project are available from https://github.com/fbubbar/sci1-t2. [TODO: clean up + open source repo before final submission]
-
-#v(2em)
-#bibliography("works.bib", style: "american-psychological-association", title: "Reference List")
-
-#pagebreak()
-= Appendix: Supplemental Figures <appendix>
-
-#grid(
-  columns: 2,
-  column-gutter: 1em,
-  [#figure(
-    image("figs/physical_pendulum.jpg"),
-    caption: short-caption(
-      [Image of the physical pendulum setup],
-      [Image of the physical pendulum setup.]
-    )
-  ) <physical_pendulum_setup>],
-  [#figure(
-    box(height: 40%)[TODO: torsional pendulum],
-    caption: short-caption(
-      [Image of the torsional pendulum setup],
-      [Image of the torsional pendulum setup.]
-    )
-  ) <torsional_pendulum_setup>],
-)
