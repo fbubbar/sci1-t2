@@ -92,7 +92,8 @@ def point_method(trial, plot_points=False):
         log.warning('zero method returned no results')
         return None, None
     elif len(diffs) == 1:
-        T, dT = diffs[0] * 4, np.inf
+        log.warning('only two data points, skipping trial')
+        return None, None
     else:
         T, dT = diffs.mean() * 4, diffs.std() * 4
 
