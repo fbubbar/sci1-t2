@@ -75,8 +75,21 @@ def process_csv(file):
             comment = None
 
         mask = (data['Time (s)'] >= start) & (data['Time (s)'] <= end)
-        trial = data.loc[mask]
-        meta = (i, datadir, comment)
+        trial = data.loc[mask].copy()
+
+        # Create a unique trial ID: basename of datadir, segment index, actual_start time
+        # Sanitize datadir basename to remove characters that might be problematic in IDs/filenames
+        sanitized_datadir_basename = "".join(c if c.isalnum() else "_" for c in path.basename(datadir))
+        trial_id = f"{sanitized_datadir_basename[-2:]} Segment {i} Start Time {start:.2f}"
+        
+        meta = {
+            'trial_id': trial_id,
+            'original_segment_index': i,
+            'source_directory': datadir,
+            'comment': comment,
+            'start_time_original': start,
+            'end_time_original': end,
+        }
 
         trials.append(trial)
         trials_meta.append(meta)
@@ -84,7 +97,7 @@ def process_csv(file):
     return trials, trials_meta
 
 
-def plot_trials_w(trials, trials_meta, include_omega=True, manual_is=None):
+def plot_trials_w(trials, trials_meta, include_omega=True):
     w_label = 'Angular Velocity [rad/s]'
     w_cols = [
         'Gyroscope x (rad/s)',
@@ -92,28 +105,28 @@ def plot_trials_w(trials, trials_meta, include_omega=True, manual_is=None):
         'Gyroscope z (rad/s)',
         'Absolute (rad/s)',
     ]
-    for i, t in enumerate(trials):
-        if manual_is: i_label = manual_is[i]
-        plot_trial(i_label or i, t, trials_meta[i], w_cols, w_label, with_absolute=include_omega)
+    for i, t_data in enumerate(trials):
+        plot_trial(t_data, trials_meta[i], w_cols, w_label, with_absolute=include_omega)
 
-def plot_trials_L(trials, trials_meta, manual_is=None):
+
+def plot_trials_L(trials, trials_meta):
     L_label = 'Angular momentum [kg m$^2$ s$^{-1}$]'
     L_cols = ['Lx', 'Ly', 'Lz', 'L']
-    for i, t in enumerate(trials):
-        if manual_is: i_label = manual_is[i]
-        plot_trial(i_label or i, t, trials_meta[i], L_cols, L_label)
+    for i, t_data in enumerate(trials):
+        plot_trial(t_data, trials_meta[i], L_cols, L_label)
 
 
-def plot_trial(i, trial, meta, cols, ylabel, with_absolute=True):
-    title = f'Trial {i+1}'
+def plot_trial(trial, meta, cols, ylabel, with_absolute=True, custom_title=None):
+    if custom_title:
+        title = custom_title
+    else:
+        title = f"Trial: {meta['trial_id']}"
+        if meta['comment']:
+            title += f" ({meta['comment']})"
+
+    log.info(f"Plotting {title}")
+    log.info(f"Source: '{meta['source_directory']}', Original Segment Index: {meta['original_segment_index']}")
     x, y, z, a = cols
-
-    # process metadata
-    j, source, comment = meta
-    log.info(f"{title}: source '{source}' #{j}")
-    if comment:
-        log.info(f'Comment: {comment}')
-        title = f'{title}: {comment}'
 
     y_axis = [z, x, y] # Iz > Ix > Iy
     colours = ['#4285f4', '#ea4335', '#fbbc04']
@@ -136,8 +149,62 @@ def plot_trial(i, trial, meta, cols, ylabel, with_absolute=True):
     ax.set_ylabel(ylabel)
     ax.set_xlabel('Time [s]')
     plt.title(title)
-    save_figure(f'trial_{i+1}')
     plt.show()
+
+def save_selected_trial_figure(trials, trials_meta, trial_id_to_save, plot_title_prefix="Saved Trial", with_absolute=True):
+    found_trial_data = None
+    found_meta_data = None
+
+    for i, meta_item in enumerate(trials_meta):
+        if meta_item['trial_id'] == trial_id_to_save:
+            found_trial_data = trials[i]
+            found_meta_data = meta_item
+            break
+    
+    if found_trial_data is None:
+        log.error(f"Trial with ID '{trial_id_to_save}' not found for saving.")
+        return
+    # Standard columns and label for omega plots
+    w_label = 'Angular Velocity [rad/s]'
+    w_cols = [ 
+        'Gyroscope x (rad/s)', 'Gyroscope y (rad/s)',
+        'Gyroscope z (rad/s)', 'Absolute (rad/s)'
+    ]
+    x_col, y_col, z_col, abs_col = w_cols
+    include_omega_absolute = True # Corresponds to 'with_absolute' for omega plots
+
+
+    # Construct a title for the saved figure
+    title = f"{plot_title_prefix}: {found_meta_data['trial_id']}"
+    if found_meta_data['comment']:
+        title += f" - {found_meta_data['comment']}"
+    
+    log.info(f"Saving plot for {title}")
+    log.info(f"Source: '{found_meta_data['source_directory']}', Original Segment Index: {found_meta_data['original_segment_index']}")
+
+    plot_columns = [z_col, x_col, y_col]
+    colours = ['#4285f4', '#ea4335', '#fbbc04']
+    legend_labels = ['Primary Axis (z)', 'Intermediate Axis (x)', 'Tertiary Axis (y)']
+
+    if with_absolute:
+        plot_columns.append(abs_col)
+        colours.append('black')
+        legend_labels.append('Absolute')
+
+    plt.figure() # Create a new figure context for saving
+    ax = found_trial_data.plot(x='Time (s)', y=plot_columns, color=colours)
+    ax.legend(legend_labels)
+    ax.set_ylabel("Angular Velocity [rad/s]")
+    ax.set_xlabel('Time [s]')
+    plt.title(title)
+    
+    # Sanitize trial_id for use as a filename
+    safe_filename_base = "".join(c if c.isalnum() or c in ['.', '_', '-'] else '_' for c in found_meta_data['trial_id'])
+    figure_filename = f"trial_{safe_filename_base}"
+    
+    save_figure(figure_filename)
+    plt.close() # Close the plot after saving to free memory
+    log.info(f"Figure for trial {found_meta_data['trial_id']} saved with base name '{figure_filename}'")
 
 
 def fourier_plot_speed_vs_period(trials, period_data):

@@ -115,7 +115,7 @@ def point_method(trial, plot_points=False):
 def point_trial_periods(trials, trials_meta, plot_points=False):
     period_data = pd.DataFrame(columns=['omega0', 'T', 'dT', 'rel_err'])
     for i, (trial, meta) in enumerate(zip(trials, trials_meta)):
-        j, src, comment = meta
+        j, src, comment = meta["original_segment_index"], meta["source_directory"], meta["comment"]
         if isinstance(comment, str) and 'intermediate' in comment.lower():
             omega0 = trial['Gyroscope x (rad/s)'].abs().max()
 
