@@ -265,7 +265,7 @@ def fit_model(period_data):
     xForLine = np.linspace(min_x, max_x, 200)
     yForLine = model(xForLine, *optimized_parameters)
     a, b, c = optimized_parameters
-    model_label = f'Model: $T = {a:.2f}/(\omega_0 + {b:.2f}\\,\\text{{s}}^{{-1}}) + {c:.3f}$ s'
+    model_label = f'Model: $T = {a:.2f}/(\\omega_0 + {b:.2f}\\,\\text{{s}}^{{-1}}) + {c:.3f}$ s'
     plt.errorbar(speed, period, yerr=period_err, fmt='o', markersize=3, capsize=2, label='Measured')
     plt.plot(xForLine, yForLine, label=model_label)
     plt.title('Predicting the Precession Period')
