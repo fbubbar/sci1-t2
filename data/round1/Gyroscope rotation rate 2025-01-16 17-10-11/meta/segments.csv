@@ -1,8 +1,0 @@
-segment,start,end,keep,comment
-0,4.8,6.2,false,Not a trial
-1,12.0,13.0,,Intermediate axis rotation
-2,18.65,19.84,,Tertiary axis rotation
-3,25.2,26.25,,Primary axis rotation
-4,29.59,30.6,,Tertiary axis rotation
-5,40.3,41.45,,Intermediate axis rotation
-6,52.37,53.45,,Fast intermediate axis rotation
