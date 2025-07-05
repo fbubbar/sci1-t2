@@ -1,0 +1,13 @@
+segment,start,end,keep,comment
+0, 3, 4.12,, Intermediate axis rotation
+1, 10.9, 11.85,, Intermediate axis rotation
+2, 17.8, 18.85,, Intermediate axis rotation
+3, 24.55, 25.5,, Intermediate axis rotation
+4, 31.17, 32.13, , Intermediate axis rotation
+5, 38.2, 39.4,, Intermediate axis rotation
+6, 50.32, 51.1,, Intermediate axis rotation
+7, 56.1, 57.2,, Intermediate axis rotation
+8, 61.4, 62.3,, Intermediate axis rotation
+9, 72.23, 73.2,, Intermediate axis rotation
+10, 81.1, 81.98,, Intermediate axis rotation
+11, 93.8, 94.45,, Intermediate axis rotation

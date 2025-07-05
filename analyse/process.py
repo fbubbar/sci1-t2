@@ -5,7 +5,7 @@ from glob import glob
 from scipy.optimize import curve_fit
 
 
-def load_files(pat, pendulum=False):
+def load_files(pat, pendulum=False, if_starts=True):
     if isinstance(pat, str):
         pats = [pat]
     else:
@@ -19,7 +19,7 @@ def load_files(pat, pendulum=False):
     trials = []
     trials_meta = []
     for f in csv_files:
-        t, m = process_csv(f)
+        t, m = process_csv(f, if_starts=if_starts)
         trials.extend(t)
         trials_meta.extend(m)
     
@@ -34,7 +34,7 @@ def get_or(df, col, i, default=None):
     return res
 
 
-def process_csv(file):
+def process_csv(file, if_starts=True):
     log.info(f"Processing '{file}' ...")
     data = pd.read_csv(file)
     datadir = path.dirname(file)
@@ -44,8 +44,10 @@ def process_csv(file):
     starts = time_data.loc[time_data['event'] == 'START', 'experiment time'].values
     pauses = time_data.loc[time_data['event'] == 'PAUSE', 'experiment time'].values
 
+
     # try to load segments data
     segments_file = path.join(datadir, 'meta/segments.csv')
+    log.info(f"Looking for segments file at '{segments_file}'")
     if path.isfile(segments_file):
         segments = pd.read_csv(segments_file)
     else:
@@ -57,6 +59,9 @@ def process_csv(file):
     trials_meta = []
 
     # go through each segment of this file
+    if not if_starts:
+        starts = segments["start"]
+        pauses = segments["end"]
     for i, (start, end) in enumerate(zip(starts, pauses)):
         if i in segments['segment'].values:
             # if we have cutoff data, use it to crop the data;
@@ -98,6 +103,7 @@ def process_csv(file):
 
 
 def plot_trials_w(trials, trials_meta, include_omega=True):
+    log.info("Plotting angular velocity trials...")
     w_label = 'Angular Velocity [rad/s]'
     w_cols = [
         'Gyroscope x (rad/s)',

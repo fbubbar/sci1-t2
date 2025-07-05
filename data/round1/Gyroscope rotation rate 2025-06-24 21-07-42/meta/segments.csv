@@ -1,0 +1,50 @@
+segment,start,end,keep,comment
+0,1.9,2.55,,Intermediate axis rotation
+1,6.25,7.1,,Intermediate axis rotation
+2,10.3,11.4,,Intermediate axis rotation
+3,15.75,16.75,,Intermediate axis rotation
+4,19.45,20.4,,Intermediate axis rotation
+5, 23.75, 24.7,,Intermediate axis rotation
+6, 28.25, 29.3,,Intermediate axis rotation
+7, 32.4, 33.55,,Intermediate axis rotation
+8, 35.45, 36.5,,Intermediate axis rotation
+9, 38.25, 39.3,,Intermediate axis rotation
+10, 41.75, 42.85,,Intermediate axis rotation
+11, 45.4, 46.4,,Intermediate axis rotation
+12, 49.7, 50.82,,Intermediate axis rotation
+13, 53.5, 54.5, ,Intermediate axis rotation
+14, 56.82, 57.9, ,Intermediate axis rotation
+15, 60.8, 61.8, ,Intermediate axis rotation
+16, 64.1, 65.18, ,Intermediate axis rotation
+17, 69.08, 70.1, ,Intermediate axis rotation
+18, 72.92, 74.0, ,Intermediate axis rotation
+19, 78.9, 80.05, ,Intermediate axis rotation
+20, 82.37, 83.4, ,Intermediate axis rotation
+21, 86.0, 87.2, ,Intermediate axis rotation
+22, 90.75, 91.8, ,Intermediate axis rotation
+23, 94.9, 95.35, ,Intermediate axis rotation
+24, 99.05, 100.2, ,Intermediate axis rotation
+25, 104.5, 105.59, ,Intermediate axis rotation
+26, 107.8, 108.8, ,Intermediate axis rotation
+27, 111.9, 112.85, ,Intermediate axis rotation
+28, 115.2, 116.3, ,Intermediate axis rotation
+29, 119.4, 120.5, ,Intermediate axis rotation
+30, 122.97, 124.1, ,Intermediate axis rotation
+31, 127.4, 128.4, ,Intermediate axis rotation
+32, 130.95, 132, ,Intermediate axis rotation
+33, 134.78, 135.8, ,Intermediate axis rotation
+34, 138.35, 139.4, ,Intermediate axis rotation
+35, 142, 143.06, ,Intermediate axis rotation
+36, 145.6, 146.71, ,Intermediate axis rotation
+37, 149.4, 150.45, ,Intermediate axis rotation
+38, 152.82, 153.9, ,Intermediate axis rotation
+39, 157.6, 158.5, ,Intermediate axis rotation
+40, 161.3, 162.42, ,Intermediate axis rotation
+41, 165.65, 166.75, ,Intermediate axis rotation
+42, 169.38, 170.52, ,Intermediate axis rotation
+43, 174.2, 175.35, ,Intermediate axis rotation
+44, 177.75, 178.8, ,Intermediate axis rotation
+45, 181.9, 182.95, ,Intermediate axis rotation
+46, 186.6, 187.6, ,Intermediate axis rotation
+47, 190.7, 191.7, ,Intermediate axis rotation
+48, 194.65, 195.6, ,Intermediate axis rotation
