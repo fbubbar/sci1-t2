@@ -297,12 +297,14 @@ def fit_model(period_data):
     chisq = np.sum(np.power(ru,2)) / n_dof
     log.info(f'chi^2: {chisq:.2f}')
 
-def filter_trials(trials, cutoff):
+def filter_trials(trials, meta, cutoff):
     filtered_trials = []
-    for trial in trials:
+    filtered_meta = []
+    for trial, trial_meta in zip(trials, meta):
         w10 = trial['Gyroscope z (rad/s)'].abs().max()
         w20 = trial['Gyroscope x (rad/s)'].abs().max()
         w30 = trial['Gyroscope y (rad/s)'].abs().max()
         if w10 <= cutoff*w20 and w30 <= cutoff*w20:
             filtered_trials.append(trial)
-    return filtered_trials
+            filtered_meta.append(trial_meta)
+    return (filtered_trials, filtered_meta)
