@@ -254,7 +254,7 @@ def fit_model(period_data):
     def model(x, a, b, c):
         return a/(x + b) + c
     num_parameters = 3
-    param_bounds=([-np.inf, -np.inf, -np.inf],[np.inf, np.inf, np.inf])  
+    param_bounds=([0, -np.inf, -np.inf],[np.inf, np.inf, np.inf])  
     initial_param=(1,0, 0) 
     speed = period_data['omega0']
     period = period_data['T']
@@ -297,20 +297,7 @@ def fit_model(period_data):
     chisq = np.sum(np.power(ru,2)) / n_dof
     log.info(f'chi^2: {chisq:.2f}')
 
-def filter_trials(trials, meta, cutoff):
-    filtered_trials = []
-    filtered_meta = []
-    for trial, trial_meta in zip(trials, meta):
-        w10 = trial['Gyroscope z (rad/s)'].abs().max()
-        w20 = trial['Gyroscope x (rad/s)'].abs().max()
-        w30 = trial['Gyroscope y (rad/s)'].abs().max()
-        if w10 <= cutoff*w20 and w30 <= cutoff*w20:
-            filtered_trials.append(trial)
-            filtered_meta.append(trial_meta)
-    return (filtered_trials, filtered_meta)
-
-
-def filter_trials_new(trials, meta, threshold=1):
+def filter_trials(trials, meta, threshold=1):
     """
     Filter trials based on the condition that the gyroscope z and y components
     must not exceed the x component by a specified threshold when compared to the x
