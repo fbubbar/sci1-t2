@@ -66,7 +66,7 @@ def fourier_trial_freqs(trials, trials_meta, plot_spectra=False):
     return period_data
 
 
-def point_method(trial, plot_points=False):
+def point_method(trial, plot_points=False, window_size=10):
     wi = trial['Gyroscope x (rad/s)']
     time = trial['Time (s)']
 
@@ -79,7 +79,7 @@ def point_method(trial, plot_points=False):
     y2 = np.array(wi[end_indices])
     zero_times = x1 - y1*(x2-x1)/(y2-y1)
     
-    n = 5 # window size
+    n = window_size # window size
     local_min_i = wi == wi.rolling(n, center=True).min()
     local_max_i = wi == wi.rolling(n, center=True).max()
     local_min_t = time[local_min_i]
@@ -112,14 +112,14 @@ def point_method(trial, plot_points=False):
 
 
 # run the point method on all series to find the periods
-def point_trial_periods(trials, trials_meta, plot_points=False):
+def point_trial_periods(trials, trials_meta, plot_points=False, window_size=10):
     period_data = pd.DataFrame(columns=['omega0', 'T', 'dT', 'rel_err'])
     for i, (trial, meta) in enumerate(zip(trials, trials_meta)):
         j, src, comment = meta["original_segment_index"], meta["source_directory"], meta["comment"]
         if isinstance(comment, str) and 'intermediate' in comment.lower():
             omega0 = trial['Gyroscope x (rad/s)'].abs().max()
 
-            T, dT = point_method(trial, plot_points=plot_points)
+            T, dT = point_method(trial, plot_points=plot_points, window_size=window_size)
             if T and dT:
                 rel_dT = dT/T * 100
                 period_data.loc[i] = [omega0, T, dT, rel_dT]
