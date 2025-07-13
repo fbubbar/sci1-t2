@@ -308,3 +308,24 @@ def filter_trials(trials, meta, cutoff):
             filtered_trials.append(trial)
             filtered_meta.append(trial_meta)
     return (filtered_trials, filtered_meta)
+
+
+def filter_trials_new(trials, meta, threshold=1):
+    """
+    Filter trials based on the condition that the gyroscope z and y components
+    must not exceed the x component by a specified threshold when compared to the x
+    when x is at its maximum.
+    """
+    filtered_trials = []
+    filtered_meta = []
+
+    for trial, trial_meta in zip(trials, meta):
+        w20 = trial['Gyroscope x (rad/s)'].abs().max()
+        index_max = trial['Gyroscope x (rad/s)'].abs().idxmax()
+        w10 = trial['Gyroscope z (rad/s)'].abs().loc[index_max]
+        w30 = trial['Gyroscope y (rad/s)'].abs().loc[index_max]
+        if w10 <= threshold * w20 and w30 <= threshold * w20:
+            filtered_trials.append(trial)
+            filtered_meta.append(trial_meta)
+    return filtered_trials, filtered_meta
+    
