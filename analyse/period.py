@@ -137,24 +137,63 @@ def point_trial_periods(trials, trials_meta, plot_points=False, window_size=10):
 
 # zero method: for use with the moi pendulum data
 # mostly analogous to the `point_method`
-def zero_method(trials, axis):
-    diffs = []
-    for trial in trials:
-        wi = trial[axis]
-        time = trial['Time (s)']
+def zero_method(trial, axis, plot_points=False):
+    wi = trial[axis]
+    time = trial['Time (s)']
 
-        end_indices = np.sign(wi).diff().fillna(0) != 0
-        start_indices = list(end_indices[1:]) + [False]
+    end_indices = np.sign(wi).diff().fillna(0) != 0
+    start_indices = list(end_indices[1:]) + [False]
 
-        x1 = np.array(time[start_indices])
-        x2 = np.array(time[end_indices])
-        y1 = np.array(wi[start_indices])
-        y2 = np.array(wi[end_indices])
-        zero_times = x1 - y1*(x2-x1)/(y2-y1)
-        diffs = np.concatenate([diffs, np.diff(zero_times)])
+    x1 = np.array(time[start_indices])
+    x2 = np.array(time[end_indices])
+    y1 = np.array(wi[start_indices])
+    y2 = np.array(wi[end_indices])
+    zero_times = x1 - y1*(x2-x1)/(y2-y1)
+    diffs = np.diff(zero_times)
 
-    log.info(f'finding period based on {len(diffs)} samples ...')
-    T = 2*np.mean(diffs)
-    dT = 2*np.std(diffs)
+    if len(diffs) == 0:
+        log.warning('zero method returned no results')
+        return None, None
+    elif len(diffs) == 1:
+        log.warning('only two data points, skipping trial')
+        return None, None
+    else:
+        log.info(f'found period based on {len(diffs)} samples')
+        T, dT = diffs.mean() * 2, diffs.std() * 2
+    
+    if plot_points:
+        plt.plot(time, wi)
+        plt.scatter(zero_times, np.zeros_like(zero_times), c='g')
+
+        plt.xlabel('Time [s]')
+        plt.ylabel('Angular Velocity [rad/s]')
+        save_figure('labelled_points')
+        plt.show()
+
     return T, dT
+
+
+# run the zero method on all series to find the periods
+def zero_trial_periods(trials, trials_meta, plot_points=False):
+    period_data = pd.DataFrame(columns=['omega0', 'T', 'dT', 'rel_err'])
+    for i, (trial, meta) in enumerate(zip(trials, trials_meta)):
+        j, src, comment = meta["original_segment_index"], meta["source_directory"], meta["comment"]
+        if isinstance(comment, str) and 'intermediate' in comment.lower():
+            axis = 'Gyroscope x (rad/s)'
+            omega0 = trial[axis].abs().max()
+
+            T, dT = zero_method(trial, axis, plot_points=plot_points)
+            if T and dT:
+                rel_dT = dT/T * 100
+                period_data.loc[i] = [omega0, T, dT, rel_dT]
+
+                # log the results
+                print(f'Results for segment {j} of {src}:')
+                print(f'-> initial angular speed: {omega0:.2f} rad/s')
+                print(f'-> period: {T:.4f} ± {dT:.4f} seconds (rel. {rel_dT:.2f}%)')
+                continue
+        
+        log.info(f"Skipping segment {j} of '{src}' ...")
+
+    return period_data
 
